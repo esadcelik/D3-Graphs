@@ -1,0 +1,95 @@
+﻿<html>
+<head>
+<title>project/project11/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project11/<p><pre>
+&gt;&gt;&gt;&gt; file: pipinyusmar_yusuf_muhammedali_buyukmatur.py
+from Tkinter import *
+import tkFileDialog
+import ttk
+from xlrd import *
+main = Tk()
+from recommendations import *
+
+#Mini Project 1
+
+#title of the GUI
+title = Label(main, text="Virtual Advisor v1.0", font=100)
+title.grid(row=0, column=1, columnspan=6, sticky=W+E+N+S)
+
+dict={} #empty dictionary to store the data from excel documents
+
+def askopenfilesGrade():
+    #takes multiple excel files and convert to the dictionary
+    #first store to the dict1 dictionary then store to dict dictionary
+    data = tkFileDialog.askopenfilenames(filetypes=[("xlsx","*.xlsx")])
+    for book in data:
+        books = open_workbook(book)
+        sheet = books.sheet_by_index(0)
+        dict1={}
+        for row in range(1, sheet.nrows):
+            (code, title, grade) = (sheet.cell(row,col).value for col in range(sheet.ncols))
+            dict1[(code,title)] = grade
+            dict[book] = dict1
+
+
+def askopenfilesTranscript():
+    #takes transcript excel file and convert to the dictionary
+    #first store to the dict1 dictionary then store to dict dictionary
+    data = tkFileDialog.askopenfilenames(filetypes=[("xlsx","*.xlsx")])
+    for book in data:
+        books = open_workbook(book)
+        sheet = books.sheet_by_index(0)
+        dict1={}
+        for row in range(1, sheet.nrows):
+            (code, title, grade) = (sheet.cell(row,col).value for col in range(sheet.ncols))
+            dict1[(code,title)] = grade
+            dict[book] = dict1
+
+#Label and button for Loading Past Grade
+label1 = Label(main, text="1")
+label1.grid(row=1, column=0)
+button1 = Button(main, text="Load Past Student Grade", command=askopenfilesGrade)
+<a name="0"></a><font color="#FF0000"><a href="match89-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_5.gif" alt="other" border="0" align="left"></a>
+
+button1.grid(row=1, column =1)
+
+#Label and button for Loading Current Transcript
+label2 = Label(main, text="2")
+label2.grid(row=1, column=3)
+button2 = Button(main, text="Load Your Current Transcript", command=askopenfilesTranscript)
+</font>button2.grid(row=1, column =4)
+
+#Label for Loading Collaborative Filtering Type
+label3 = Label(main, text="3")
+label3.grid(row=2, column=0)
+label4 = Label(main, text="Collaborative Filtering Type:")
+label4.grid(row=2, column=1, sticky=W)
+
+#Radiobutton for choosing Collaborative Filtering Type
+v = IntVar()
+option1 = Radiobutton(main, text="User-based", variable=v, value=1)
+option1.grid(row=3, column=1)
+option2 = Radiobutton(main, text="Item-based", variable=v, value=2)
+option2.grid(row=4, column=1)
+
+#Label for Similarity Measure
+label5 = Label(main, text="Similarity Measure:")
+label5.grid(row=2, column=4, sticky=W)
+
+#Combobox for choosing Similarity Measure
+box = ttk.Combobox(main)
+box['values'] = ('Pearson', 'Euclidean', 'Jaccard')
+box.grid(row=3, column=4)
+
+label4 = Label(main, text="4")
+label4.grid(row=5, column=0)
+button3 = Button(main, text="See teh Recomended Course")
+button3.grid(row=5, column=1)
+
+main.mainloop()</pre>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿<html>
+<head>
+<title>project/project17/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project17/<p><pre>
+&gt;&gt;&gt;&gt; file: merve_taskiran_ozlem_tirsi.py
+__author__ = 'mervetaskiran'
+from Tkinter import *
+
+
+from tkFileDialog import askopenfilename
+
+root = Tk()
+def grades(parent=root):
+    name=askopenfilename()
+    print name
+
+Button(text='Load Past Student Grades', command=grades).pack(fill=X)
+
+def transcript(parent=root):
+    name=askopenfilename()
+    print name
+
+Button(text='Load Your Current Transcript', command=transcript).pack(fill=X)
+
+v = IntVar()
+
+Label(root, text="""Collaborative Filtering Type:""", justify = LEFT, padx = 20).pack()
+Radiobutton(root,
+            text="User-Based",
+            padx = 150,
+            variable=v,
+            value=1).pack(anchor=W)
+Radiobutton(root,
+            text="Item-Based",
+            padx = 150,
+            variable=v,
+            value=2).pack(anchor=W)
+
+import ttk
+
+class Application():
+
+    def __init__(self, parent):
+        self.parent = parent
+        self.combo()
+
+    def combo(self):
+<a name="0"></a><font color="#FF0000"><a href="match64-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_13.gif" alt="other" border="0" align="left"></a>
+
+        self.box_value = StringVar()
+        self.box = ttk.Combobox(self.parent, textvariable=self.box_value,
+                                state='readonly')
+        self.box['values'] = ('Pearson', 'Euclidean', 'Jaccard')
+        self.box.current(0)
+</font>        self.box.grid(column=0, row=0)
+
+if __name__ == '__main__':
+    root=Tk()
+    app = Application(root)
+
+root.mainloop()</pre>
+
+</body>
+</html>

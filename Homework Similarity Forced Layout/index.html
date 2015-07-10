@@ -1,0 +1,85 @@
+<html>
+<head>
+<script src="d3/d3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body>
+<div id="tooltip" class="hidden">
+        	<p><div id="innerg"></div></p>
+	</div>
+<div id="tooltip2" class="hidden">
+        	<p><div id="innerg2"></div></p>
+	</div>
+<div id="wrapper">
+
+
+<div class="ppp1"><div class="opt1">
+<p>Node Score Calculation:</p>
+
+
+<form  onchange="change0()">
+Method: <input type="radio" id="r1" name="method" value="1" checked>&nbsp;Sum
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="radio" name="method"  id="r2" value="2">&nbsp;Max
+</form>
+
+
+<p>Only Use Edge Score Over:</p>
+
+<form onchange="change0()">
+
+  0%&nbsp;<input type="range" name="points" id="f1" min="0" max="100">&nbsp;100%
+</form>
+
+
+
+</div></div>
+
+
+
+<div class="ppp2"><div class="opt2">
+
+<p>Visual:</p>
+<p>Show Only the Edges with Scores Over:</p>
+<form  onchange="change0()">
+  0%&nbsp;<input type="range" name="points" id="f2" min="0" max="100">&nbsp;100%
+</form>
+
+
+
+<form onchange="change0()">
+Node Labels: <input type="radio" id="r3" name="method" value="1" checked>&nbsp;Sum
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="radio" id="r4" name="method" value="2">&nbsp;Max
+</form>
+
+
+
+
+
+</div></div>
+
+
+
+<div class="graph">
+
+</div>
+
+
+<div id="t">
+
+
+</div>
+
+</div>
+
+
+</body>
+<script src="js/main.js">
+
+
+</script>
+
+
+</html>

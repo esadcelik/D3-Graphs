@@ -1,0 +1,116 @@
+﻿<html>
+<head>
+<title>project/project3/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project3/<p><pre>
+&gt;&gt;&gt;&gt; file: yunus_albayrak.py
+from Tkinter import *
+import Tkinter
+from recommendations import *
+import tkFileDialog
+import ttk
+from xlrd import *
+class TkFileDialogExample(Tkinter.Frame):
+
+ def __init__(self, root):
+    self.d={}
+
+    Tkinter.Frame.__init__(self, root)
+
+    Tkinter.Label(text="Virtual Advisor v1.0").place(relx=.40,rely=.100)
+    Tkinter.Button(text='Load Past Student Grades', command=self.askopenfilename).place(relx=.10,rely=.20)
+    Tkinter.Button(text= "Load Your Current Transcript",command=self.transcript).place(relx=.60, rely=.20)
+    Tkinter.Radiobutton(text="Used-based",value=1,command=self.Radiobuttons).place(relx=.15,rely=.35)
+    Tkinter.Radiobutton(text="Item-based",value=2).place(relx=.15,rely=.40)
+    Tkinter.Button(text='See the Recommended Courses',).place(relx=.10,rely=.55)
+    self.box_value=StringVar()
+    self.box=ttk.Combobox(root,textvariable=self.box_value)
+    self.box['values']=('Person','Euclidean','Jaccard')
+    self.box.current(0)
+    self.box.place(relx=.60,rely=.35)
+    self.value_of_combo='Person'
+    self.value_of_combo=self.box.get()
+
+
+
+
+ def askopenfilename(self):
+    filename = tkFileDialog.askopenfilenames(parent=root)
+
+    listt=[]
+
+    for i in filename:
+        self.d.setdefault(str(i),{})
+
+    if filename:
+
+        for filex in filename:
+            k = self.d[filex]
+            book = open_workbook(filex,'.xlsx')
+            sheet = book.sheet_by_index(0)
+
+            for row_index in range(sheet.nrows):
+                for col_index in range(sheet.ncols):
+
+                     listt.append(str((sheet.cell(row_index,col_index).value)))
+                for i in range (len(listt)-1,-1,-1):
+                    if listt[i]=='Grade':
+                        listt.remove('Grade')
+                    elif listt[i]=='Code':
+                        listt.remove('Code')
+                    elif listt[i]=='Title':
+                        listt.remove('Title')
+
+            for i in range(0,len(listt),3):
+                k[listt[i]] = listt[i+2]
+    print self.d
+
+ def transcript(self):
+     filename= tkFileDialog.askopenfilename(parent=root)
+     listt=[]
+     for i in filename:
+         self.d.setdefault(str(i),{})
+     if filename:
+         for filex in filename:
+            k=self.d[filex]
+            book = open_workbook(filename,'.xlsx')
+            sheet = book.sheet_by_index(0)
+
+            for row_index in range(sheet.nrows):
+                for col_index in range(sheet.ncols):
+
+                     listt.append(str((sheet.cell(row_index,col_index).value)))
+                for i in range (len(listt)-1,-1,-1):
+                    if listt[i]=='Grade':
+                        listt.remove('Grade')
+                    elif listt[i]=='Code':
+                        listt.remove('Code')
+                    elif listt[i]=='Title':
+                        listt.remove('Title')
+
+<a name="0"></a><font color="#FF0000"><a href="match73-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_4.gif" alt="other" border="0" align="left"></a>
+
+                self.trans=filename
+            for i in range(0,len(listt),3):
+                k[listt[i]] = listt[i+2]
+</font>
+     return self.d
+
+
+
+ def Radiobuttons(self):
+     return getRecommendations(self.d,self.d)
+
+
+
+if __name__=='__main__':
+  root = Tkinter.Tk()
+  root.geometry("750x600")
+  TkFileDialogExample(root).pack()
+  root.mainloop()
+</pre>
+
+</body>
+</html>

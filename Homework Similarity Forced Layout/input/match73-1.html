@@ -1,0 +1,249 @@
+﻿<html>
+<head>
+<title>project/project3/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project35/<p><pre>
+&gt;&gt;&gt;&gt; file: emir_demircan.py
+#Emir Demircan  212990818   ENGR 212    Mini Project_1
+
+from swampy.Gui import*
+from Tkinter import*
+from tkFileDialog import*
+from xlrd import open_workbook
+from recommendations import*
+
+
+g = Gui()
+g.title('Gui')
+
+
+def read_sample_student1():
+    a = 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleStudentGrades1.xlsx'
+    book = open_workbook(a)
+    sheet = book.sheet_by_index(0)
+    d1 = {}
+    l = []
+    for row_index in range(1, sheet.nrows):
+        for col_index in range(0, sheet.ncols, 2):
+            if sheet.cell(row_index, col_index).value == 'A+':
+                l.append(4.1)
+            elif sheet.cell(row_index, col_index).value == 'A':
+                l.append(4.0)
+            elif sheet.cell(row_index, col_index).value == 'A-':
+                l.append(3.7)
+            elif sheet.cell(row_index, col_index).value == 'B+':
+                l.append(3.3)
+            elif sheet.cell(row_index, col_index).value == 'B':
+                l.append(3.0)
+            elif sheet.cell(row_index, col_index).value == 'B-':
+                l.append(2.7)
+            elif sheet.cell(row_index, col_index).value == 'C+':
+                l.append(2.3)
+            elif sheet.cell(row_index, col_index).value == 'C':
+                l.append(2.0)
+            elif sheet.cell(row_index, col_index).value == 'C-':
+                l.append(1.7)
+            elif sheet.cell(row_index, col_index).value == 'D+':
+                l.append(1.3)
+            elif sheet.cell(row_index, col_index).value == 'D':
+                l.append(1.0)
+            elif sheet.cell(row_index, col_index).value == 'D-':
+                l.append(0.5)
+            elif sheet.cell(row_index, col_index).value == 'F':
+                l.append(0.0)
+            else:
+<a name="0"></a><font color="#FF0000"><a href="match73-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_1.gif" alt="other" border="0" align="left"></a>
+
+                l.append(sheet.cell(row_index, col_index).value)
+    for x in range(0, len(l), 2):
+        d1[l[x]] = l[x+1]
+</font>    sample_pool[a] = d1
+    return
+
+
+def read_sample_student2():
+    b = 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleStudentGrades2.xlsx'
+    book = open_workbook(b)
+    sheet = book.sheet_by_index(0)
+    d2 = {}
+    l = []
+    for row_index in range(1, sheet.nrows):
+        for col_index in range(0, sheet.ncols, 2):
+            if sheet.cell(row_index, col_index).value == 'A+':
+                l.append(4.1)
+            elif sheet.cell(row_index, col_index).value == 'A':
+                l.append(4.0)
+            elif sheet.cell(row_index, col_index).value == 'A-':
+                l.append(3.7)
+            elif sheet.cell(row_index, col_index).value == 'B+':
+                l.append(3.3)
+            elif sheet.cell(row_index, col_index).value == 'B':
+                l.append(3.0)
+            elif sheet.cell(row_index, col_index).value == 'B-':
+                l.append(2.7)
+            elif sheet.cell(row_index, col_index).value == 'C+':
+                l.append(2.3)
+            elif sheet.cell(row_index, col_index).value == 'C':
+                l.append(2.0)
+            elif sheet.cell(row_index, col_index).value == 'C-':
+                l.append(1.7)
+            elif sheet.cell(row_index, col_index).value == 'D+':
+                l.append(1.3)
+            elif sheet.cell(row_index, col_index).value == 'D':
+                l.append(1.0)
+            elif sheet.cell(row_index, col_index).value == 'D-':
+                l.append(0.5)
+            elif sheet.cell(row_index, col_index).value == 'F':
+                l.append(0.0)
+            else:
+                l.append(sheet.cell(row_index, col_index).value)
+    for x in range(0, len(l), 2):
+        d2[l[x]] = l[x+1]
+    sample_pool[b] = d2
+    return
+
+
+def read_sample_student3():
+    c = 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleStudentGrades3.xlsx'
+    book = open_workbook(c)
+    sheet = book.sheet_by_index(0)
+    d3 = {}
+    l = []
+    for row_index in range(1, sheet.nrows):
+        for col_index in range(0, sheet.ncols, 2):
+            if sheet.cell(row_index, col_index).value == 'A+':
+                l.append(4.1)
+            elif sheet.cell(row_index, col_index).value == 'A':
+                l.append(4.0)
+            elif sheet.cell(row_index, col_index).value == 'A-':
+                l.append(3.7)
+            elif sheet.cell(row_index, col_index).value == 'B+':
+                l.append(3.3)
+            elif sheet.cell(row_index, col_index).value == 'B':
+                l.append(3.0)
+            elif sheet.cell(row_index, col_index).value == 'B-':
+                l.append(2.7)
+            elif sheet.cell(row_index, col_index).value == 'C+':
+                l.append(2.3)
+            elif sheet.cell(row_index, col_index).value == 'C':
+                l.append(2.0)
+            elif sheet.cell(row_index, col_index).value == 'C-':
+                l.append(1.7)
+            elif sheet.cell(row_index, col_index).value == 'D+':
+                l.append(1.3)
+            elif sheet.cell(row_index, col_index).value == 'D':
+                l.append(1.0)
+            elif sheet.cell(row_index, col_index).value == 'D-':
+                l.append(0.5)
+            elif sheet.cell(row_index, col_index).value == 'F':
+                l.append(0.0)
+            else:
+                l.append(sheet.cell(row_index, col_index).value)
+    for x in range(0, len(l), 2):
+        d3[l[x]] = l[x+1]
+    sample_pool[c] = d3
+    return
+
+
+def read_sample_transcript():
+    d = 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleTranscript.xlsx'
+    book = open_workbook(d)
+    sheet = book.sheet_by_index(0)
+    d4 = {}
+    l = []
+    for row_index in range(1, sheet.nrows):
+        for col_index in range(0, sheet.ncols, 2):
+            if sheet.cell(row_index, col_index).value == 'A+':
+                l.append(4.1)
+            elif sheet.cell(row_index, col_index).value == 'A':
+                l.append(4.0)
+            elif sheet.cell(row_index, col_index).value == 'A-':
+                l.append(3.7)
+            elif sheet.cell(row_index, col_index).value == 'B+':
+                l.append(3.3)
+            elif sheet.cell(row_index, col_index).value == 'B':
+                l.append(3.0)
+            elif sheet.cell(row_index, col_index).value == 'B-':
+                l.append(2.7)
+            elif sheet.cell(row_index, col_index).value == 'C+':
+                l.append(2.3)
+            elif sheet.cell(row_index, col_index).value == 'C':
+                l.append(2.0)
+            elif sheet.cell(row_index, col_index).value == 'C-':
+                l.append(1.7)
+            elif sheet.cell(row_index, col_index).value == 'D+':
+                l.append(1.3)
+            elif sheet.cell(row_index, col_index).value == 'D':
+                l.append(1.0)
+            elif sheet.cell(row_index, col_index).value == 'D-':
+                l.append(0.5)
+            elif sheet.cell(row_index, col_index).value == 'F':
+                l.append(0.0)
+            else:
+                l.append(sheet.cell(row_index, col_index).value)
+    for x in range(0, len(l), 2):
+        d4[l[x]] = l[x+1]
+    sample_pool[d] = d4
+    return
+
+
+def read_all():
+    read_sample_student1()
+    read_sample_student2()
+    read_sample_student3()
+    read_sample_transcript()
+    return sample_pool
+
+
+def exe():
+    if Radiobutton == 1 and combo_box == 'Pearson':
+        print getRecommendations(sample_pool, 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleTranscript.xlsx',
+                         similarity=sim_pearson)
+    elif Radiobutton == 1 and combo_box == 'Euclidean':
+        print getRecommendations(sample_pool, 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleTranscript.xlsx',
+                         similarity=sim_distance)
+    elif Radiobutton == 1 and combo_box == 'Jaccard':
+        print getRecommendations(sample_pool, 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleTranscript.xlsx',
+                         similarity=sim_jaccard)
+    return
+
+
+top_frame = Frame(g)
+top_frame.pack(side=TOP)
+bottom_frame = Frame(g)
+bottom_frame.pack(side=BOTTOM)
+
+button1 = Button(top_frame, text='Load Past Student Grades', command=askopenfiles, bg='SlateGray',
+                 fg='Wheat').pack(side=LEFT)
+button2 = Button(top_frame, text='Load Your Current Transcript', command=askopenfiles, bg='SlateGray',
+                 fg='Wheat').pack(side=RIGHT)
+button3 = Button(bottom_frame, text='See the Recommended Courses', command=exe, bg='SlateGray',
+                 fg='Wheat').pack(side=LEFT)
+
+
+label1 = g.la(text="Collaborative filtering type choice:").pack(side=LEFT)
+v = IntVar()
+Radiobutton(g, text="User-based", variable=v, value=1).pack(anchor=W)
+Radiobutton(g, text="Item-based", variable=v, value=2).pack(anchor=W)
+
+label2 = g.la(text='Similarity Measure:').pack(side=LEFT)
+import ttk
+
+
+combo_box = ttk.Combobox(g, values=('Perason', 'Eucledian', 'Jaccard')).pack(side=RIGHT)
+
+g.mainloop()
+
+sample_pool = {}
+
+
+print read_all()
+
+
+print getRecommendations(sample_pool, 'C:\Users\emirdemircan\PycharmProjects\Homeworks\SampleTranscript.xlsx',
+                         similarity=sim_pearson)</pre>
+
+</body>
+</html>

@@ -1,0 +1,485 @@
+﻿<html>
+<head>
+<title>project/project28/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project28/<p><pre>
+&gt;&gt;&gt;&gt; file: hayriye_nur_ozturk__muhammed_tugrul_cosgun.py
+__author__ = 'tugrul_nur'
+__author__ = 'tugrul_nur'
+
+
+
+
+from Tkinter import *
+
+import Tkinter, Tkconstants, tkFileDialog
+from xlrd import open_workbook,cellname
+
+lettergrades={'F':0, 'D-':0.5, 'D':1, 'D+':1.3, 'C-':1.7, 'C':2, 'C+':2.3, 'B-':2.7, 'B':3, 'B+':3.3, 'A-':3.7, 'A':4, 'A+':4.1}
+
+def getStudentData(filename):
+    book = open_workbook(filename)
+    sheet = book.sheet_by_index(0)
+    student_grades = {}
+    for row_index in range(1,sheet.nrows):
+        course_code = sheet.cell(row_index,0).value
+        grade = sheet.cell(row_index,2).value
+        student_grades[course_code] = lettergrades[grade]
+    return student_grades
+
+def askopenfilenames(self):
+
+    """Returns an opened file in read mode.
+        This time the dialog just returns a filename and the file is opened by your own code.
+        """
+
+    # get filename
+    filename = tkFileDialog.askopenfilenames(**self.file_opt)
+    return getStudentData(filename)
+        # open file on your own
+    if filename:
+        return open(filename, 'r')
+
+def askopenfilename(self):
+
+        """Returns an opened file in read mode.
+        This time the dialog just returns a filename and the file is opened by your own code.
+        """
+
+        # get filename
+        filename = tkFileDialog.askopenfilename(**self.file_opt)
+        return getStudentData(filename)
+        # open file on your own
+        if filename:
+            return open(filename, 'r')
+
+#collect every students data in nested dictionary
+all_students = {}
+all_students['Student1'] = getStudentData('SampleStudentGrades1.xlsx')
+all_students['Student2'] = getStudentData('SampleStudentGrades2.xlsx')
+all_students['Student3'] = getStudentData('SampleStudentGrades3.xlsx')
+
+
+
+#euclidian similarity function
+#Returns a distance-based similarity score for student1 and student2
+def sim_distance(prefs,student1,student2):
+    #Get the list of shared items(courses)
+    si={}
+    for item in prefs[student1]:
+        if item in prefs[student2]:
+            si[item]=1
+    if len(si)==0:
+        return 0
+    # Add up the squares of all the differences
+    sum_of_squares=sum([pow(prefs[student1][item]-prefs[student2][item],2)for item in prefs[student1] if item in prefs[student2]])
+
+    return 1/(1+sum_of_squares)
+
+#pearson similarity function
+#Returns the Pearson correlation coefficient for student1 and student2
+def sim_pearson(prefs,student1,student2):
+    # Get the list of mutually taken courses
+    si={}
+    for item in prefs[student1]:
+        if item in prefs[student2]:
+            si[item]=1
+    n=len(si)
+    if n==0:
+        return 0
+    # Sums of all the preferences
+    sum1=sum([prefs[student1][it]for it in si])
+    sum2=sum([prefs[student2][it]for it in si])
+
+    # Sums of the squares
+    sum1Sq=sum([pow(prefs[student1][it],2)for it in si])
+    sum2Sq=sum([pow(prefs[student2][it],2)for it in si])
+
+    # Sum of the products
+    pSum=sum([prefs[student1][it]*prefs[student2][it] for it in si])
+
+    # Calculate r (Pearson score)
+    num=pSum-(sum1*sum2/n)
+    den=sqrt((sum1Sq-pow(sum1,2)/n)*(sum2Sq-pow(sum2,2)/n))
+    if den==0:
+        return 0
+
+    r=num/den
+
+    return r
+
+#jaccard similarity function
+def sim_jaccard(prefs, student1, student2):  # Jaccard Distance (A, B) = |A intersection B| / |A union B|
+
+    # Get the list of shared_items
+    s1_intersect_s2 = {}
+    for item in prefs[student1]:
+        if item in prefs[student2]: s1_intersect_s2[item] = 1
+
+    # if they have no items in common, return 0
+    if len(s1_intersect_s2) == 0: return 0
+
+    # Get the list of all items that we have
+    s1_union_s2 = prefs[student1]
+    for item in prefs[student2]:
+        if item not in s1_union_s2: s1_union_s2[item] = 1
+
+    #Get the total number of items for intersection and union
+    s1_intersect_s2, s1_union_s2 = len(s1_intersect_s2), len(s1_union_s2)
+
+    return float(s1_intersect_s2) / float(s1_union_s2) # return jaccard distance
+
+# Returns the best matches for students from the prefs dictionary.
+# Number of results and similarity function are optional params.
+# Use sim_distance
+def topMatchesdistance(prefs, student, n=5, similarity= sim_distance):
+    scores = [(similarity(prefs, student, other), other)
+              for other in prefs if other != student]
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+#Use pearson similarity
+def topMatchespearson(prefs, student, n=5, similarity=sim_pearson):
+    scores = [(similarity(prefs, student, other), other)
+              for other in prefs if other != student]
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+
+#Use jaccard similarity
+def topMatchesjaccard(prefs, student, n=5, similarity=sim_jaccard):
+    scores = [(similarity(prefs, student, other), other)
+              for other in prefs if other != student]
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+
+# Gets recommendations for a student by using a weighted average
+# of every other student's grades
+def getRecommendations(prefs, student, similarity):
+    totals = {}
+    simSums = {}
+    for other in prefs:
+        # don't compare me to myself
+        if other == student: continue
+        sim = similarity(prefs, student, other)
+
+        # ignore grades of zero
+        if sim == 0: continue
+        for item in prefs[other]:
+
+            # get only courses I haven't attend yet
+            if item not in prefs[student] or prefs[student][item] == 0:
+                # Similarity * Score
+                totals.setdefault(item, 0)
+                totals[item] += prefs[other][item] * sim
+                # Sum of similarities
+                simSums.setdefault(item, 0)
+                simSums[item] += sim
+
+    # Create the normalized list
+    rankings = [(total / simSums[item], item) for item, total in totals.items()]
+
+    # Return the sorted list
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+
+def transformPrefs(prefs):
+    result = {}
+    for student in prefs:
+        for item in prefs[student]:
+            result.setdefault(item, {})#calculate similiar items using euclidian similarity
+
+def calculateSimilarItemsdistance(prefs, n=10):
+    # Create a dictionary of items showing which other items they
+    # are most similar to.
+    result = {}
+    # Invert the preference matrix to be item-centric
+    itemPrefs = transformPrefs (prefs)
+    c = 0
+    for item in itemPrefs:
+        # Status updates for large datasets
+        c += 1
+        if c % 100 == 0: print "%d / %d" % (c, len(itemPrefs))
+        # Find the most similar items to this one
+        scores = topMatchesdistance(itemPrefs, item, n=n, similarity=sim_distance)
+        result[item] = scores
+    return result
+
+#calculate similiar items using sim_pearson
+def calculateSimilarItemspearson(prefs, n=10):
+    # Create a dictionary of items showing which other items they
+    # are most similar to.
+    result = {}
+    # Invert the preference matrix to be item-centric
+    itemPrefs = transformPrefs (prefs)
+    c = 0
+    for item in itemPrefs:
+        # Status updates for large datasets
+        c += 1
+        if c % 100 == 0: print "%d / %d" % (c, len(itemPrefs))
+        # Find the most similar items to this one
+        scores = topMatchespearson(itemPrefs, item, n=n, similarity=sim_pearson)
+        result[item] = scores
+    return result
+
+#calculate similiar items using sim_jaccard
+def calculateSimilarItemsjaccard(prefs, n=10):
+    # Create a dictionary of items showing which other items they
+    # are most similar to.
+    result = {}
+    # Invert the preference matrix to be item-centric
+    itemPrefs = transformPrefs (prefs)
+    c = 0
+    for item in itemPrefs:
+        # Status updates for large datasets
+        c += 1
+        if c % 100 == 0: print "%d / %d" % (c, len(itemPrefs))
+        # Find the most similar items to this one
+        scores = topMatchesjaccard(itemPrefs, item, n=n, similarity=sim_jaccard)
+        result[item] = scores
+    return result
+
+
+#Get recommendation using euclidian similarity
+def getRecommendedItemsdistance(prefs, itemMatchdistance, user):
+    userRatings = prefs[user]
+    scores = {}
+    totalSim = {}
+    # Loop over items(courses) taken by this student
+    for (item, rating) in userRatings.items():
+
+        # Loop over items similar to this one
+        for (similarity, item2) in itemMatchdistance[item]:
+
+            # Ignore if this stundet has already took this item
+            if item2 in userRatings: continue
+            # Weighted sum of rating times similarity
+            scores.setdefault(item2, 0)
+            scores[item2] += similarity * rating
+            # Sum of all the similarities
+            totalSim.setdefault(item2, 0)
+            totalSim[item2] += similarity
+
+    # Divide each total score by total weighting to get an average
+    rankings = [(score / totalSim[item], item) for item, score in scores.items()]
+
+    # Return the rankings from highest to lowest
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+
+#Get recommendation using pearson similarity
+def getRecommendedItemspearson(prefs, itemMatchpearson, user):
+    userRatings = prefs[user]
+    scores = {}
+    totalSim = {}
+    # Loop over items(courses) taken by this student
+    for (item, rating) in userRatings.items():
+
+        # Loop over items similar to this one
+        for (similarity, item2) in itemMatchpearson[item]:
+
+            # Ignore if this stundet has already took this item
+            if item2 in userRatings: continue
+            # Weighted sum of rating times similarity
+            scores.setdefault(item2, 0)
+            scores[item2] += similarity * rating
+            # Sum of all the similarities
+            totalSim.setdefault(item2, 0)
+            totalSim[item2] += similarity
+
+    # Divide each total score by total weighting to get an average
+    rankings = [(score / totalSim[item], item) for item, score in scores.items()]
+
+    # Return the rankings from highest to lowest
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+
+#Get recommendation use jaccard similarity
+def getRecommendedItemsjaccard(prefs, itemMatchjaccard, user):
+    userRatings = prefs[user]
+    scores = {}
+    totalSim = {}
+    # Loop over items(courses) taken by this student
+    for (item, rating) in userRatings.items():
+
+        # Loop over items similar to this one
+        for (similarity, item2) in itemMatchjaccard[item]:
+
+            # Ignore if this stundet has already took this item
+            if item2 in userRatings: continue
+            # Weighted sum of rating times similarity
+            scores.setdefault(item2, 0)
+            scores[item2] += similarity * rating
+            # Sum of all the similarities
+            totalSim.setdefault(item2, 0)
+            totalSim[item2] += similarity
+
+    # Divide each total score by total weighting to get an average
+    rankings = [(score / totalSim[item], item) for item, score in scores.items()]
+
+    # Return the rankings from highest to lowest
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+#user based and euclidian similarity
+def user_distance(self):
+    my_grades = getStudentData("SampleTranscript.xlsx")
+    #get recommendation but do not show
+    x = getRecommendations(prefs, my_grades,similarity=sim_distance)
+
+#user based and pearson similarity
+def user_pearson(self):
+    my_grades= getStudentData("SampleTranscript.xlsx")
+    #get recommendation but do not show
+    x = getRecommendations(prefs, my_grades,similarity=sim_pearson)
+
+#user based and jaccard similarity
+def user_jaccard(self):
+     my_grades= getStudentData("SampleTranscript.xlsx")
+     #get recommendation but do not show
+     x = getRecommendations(prefs, my_grades,similarity=sim_jaccard)
+
+#item based and pearson similarity
+def item_pearson(self):
+    my_grades= getStudentData("SampleTranscript.xlsx")
+    #get recommendation but do not show
+    x= getRecommendedItemspearson()
+
+#item based and jaccard similarity
+def item_jaccard(self):
+    my_grades= getStudentData("SampleTranscript.xlsx")
+    #get recommendation but do not show
+    x= getRecommendedItemsjaccard() #???
+
+#item based and euclidian similarity
+def item_distance(self):
+    my_grades= getStudentData("SampleTranscript.xlsx")
+    #get recommendation but do not show
+    x= getRecommendedItemsdistance() #???
+
+
+
+<a name="2"></a><font color="#0000FF"><a href="match22-1.html#2" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_2_1.gif" alt="other" border="0" align="left"></a>
+
+class McListBox(object):
+    """use a ttk.TreeView as a multicolumn ListBox"""
+    def __init__(self):
+        self.tree = None
+        self._setup_widgets()
+        self._build_tree()
+    def _setup_widgets(self):
+        s = """\
+</font>click on header to sort by that column
+to change width of column drag boundary
+        """
+        msg = ttk.Label(wraplength="4i", justify="left", anchor="n",
+            padding=(10, 2, 10, 6), text=s)
+        msg.pack(fill='x')
+        container = ttk.Frame()
+        container.pack(fill='both', expand=True)
+        # create a treeview with dual scrollbars
+<a name="0"></a><font color="#FF0000"><a href="match22-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_7.gif" alt="other" border="0" align="left"></a>
+
+        self.tree = ttk.Treeview(columns=course_header, show="headings")
+        vsb = ttk.Scrollbar(orient="vertical",
+            command=self.tree.yview)
+        hsb = ttk.Scrollbar(orient="horizontal",
+            command=self.tree.xview)
+        self.tree.configure(yscrollcommand=vsb.set,
+            xscrollcommand=hsb.set)
+        self.tree.grid(column=0, row=0, sticky='nsew', in_=container)
+        vsb.grid(column=1, row=0, sticky='ns', in_=container)
+        hsb.grid(column=0, row=1, sticky='ew', in_=container)
+        container.grid_columnconfigure(0, weight=1)
+        container.grid_rowconfigure(0, weight=1)
+    def _build_tree(self):
+        for col in course_header:
+            self.tree.heading(col, text=col.title(),
+                command=lambda c=col: sortby(self.tree, c, 0))
+</font>            # adjust the column's width to the header string
+            self.tree.column(col,
+                width=tkFont.Font().measure(col.title()))
+<a name="1"></a><font color="#00FF00"><a href="match22-1.html#1" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_1_2.gif" alt="other" border="0" align="left"></a>
+
+        for item in course_list:
+            self.tree.insert('', 'end', values=item)
+            # adjust column's width if necessary to fit each value
+            for ix, val in enumerate(item):
+                col_w = tkFont.Font().measure(val)
+                if self.tree.column(course_header[ix],width=None)&lt;col_w:
+                    self.tree.column(course_header[ix], width=col_w)
+</font>def sortby(tree, col, descending):
+    """sort tree contents when a column header is clicked on"""
+    # grab values to sort
+    data = [(tree.set(child, col), child) \
+        for child in tree.get_children('')]
+    # if the data to be sorted is numeric change to float
+    #data =  change_numeric(data)
+    # now sort the data in place
+    data.sort(reverse=descending)
+    for ix, item in enumerate(data):
+        tree.move(item[1], '', ix)
+    # switch the heading so it will sort in the opposite direction
+    tree.heading(col, command=lambda col=col: sortby(tree, col, \
+        int(not descending)))
+# the test data ...
+course_header = ['course', 'grade']
+course_list = []
+
+#show the result of getrecommendations and getrecommendationsitem
+def showtheresult():
+    root = tk.Tk()
+    root.wm_title("multicolumn ListBox")
+    mc_listbox = McListBox()
+    root.mainloop()
+
+
+
+
+import ttk
+
+
+def callback():
+    print "click!"
+
+
+master = Tk()
+b = Button(master, text="Virtual Advisor V1.0",width=50,height=5, command=callback,bg="blue",fg="black")
+b.pack(padx=5,pady=10,side = TOP)
+
+
+b = Button(master, text="Load Past Student Grades",width=50,height=5, command=askopenfilenames,bg="gray",fg="black")
+b.pack(padx=5,pady=10,side = LEFT)
+b = Button(master, text="Load Your Current Transcript",width=50,height=5, command=askopenfilename,bg="gray",fg="black")
+
+b.pack(side = RIGHT)
+
+v = IntVar()
+
+Radiobutton(master, text="item-based",width=7,height=2, variable=v, value=1).pack(anchor=S)
+Radiobutton(master, text="user-based",width=7,height=2, variable=v, value=2).pack(anchor=S)
+box_value = StringVar()
+box = ttk.Combobox(master, textvariable=box_value)
+box['values'] = ('Euclidean', 'Pearson', 'Jacard')
+box.current(0)
+box.pack()
+
+b = Button(master, text="See the Recommended Courses",width=50,height=5, command=showtheresult,bg="gray",fg="black")
+b.pack(padx=5,pady=10,side = BOTTOM)
+
+
+mainloop()
+</pre>
+
+</body>
+</html>

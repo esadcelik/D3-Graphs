@@ -1,0 +1,186 @@
+﻿<html>
+<head>
+<title>project/project25/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project25/<p><pre>
+&gt;&gt;&gt;&gt; file: Musaab_Albayati_Ibrahim_Elnahal.py
+#Musaab Al-bayati 213122265
+#Ibrahim Elnahal 210240785
+import Tkconstants, tkFileDialog
+import Tkinter as tk
+import tkMessageBox
+
+from xlrd import open_workbook
+import os
+
+import recommendations
+
+class RecommendationTable(tk.Frame):
+    def __init__(self, parent, rows=7, columns=2):
+        # use black background so it "peeks through" to
+        # form grid lines
+        tk.Frame.__init__(self, parent, background="black")
+        self._widgets = []
+        for row in range(rows):
+            current_row = []
+            for column in range(columns):
+                label = tk.Label(self, text="%s/%s" %(row, column), borderwidth=0, width=50)
+                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
+                current_row.append(label)
+            self._widgets.append(current_row)
+
+        for column in range(columns):
+            self.grid_columnconfigure(column, weight=1)
+
+
+    def set(self, row, column, value):
+        widget = self._widgets[row][column]
+        widget.configure(text=value)
+
+
+
+
+class RecommendationUI(tk.Frame):
+
+    letters_grades = {"A+": 4.1, "A": 4.0, "A-": 3.7, "B+": 3.3, "B": 3.0, "B-": 2.7,
+                          "C+": 2.3, "C": 2.0, "C-": 1.7, "D+": 1.3, "D": 1.0, "D-": 0.5, "F": 0.0}
+
+    # define options for opening or saving a file
+    file_opt = options = {}
+    options['defaultextension'] = '.xlsx'
+    options['filetypes'] = [('all files', '.*'), ('excel files', '.xlsx')]
+    options['initialdir'] = os.path.dirname(os.path.realpath(__file__))
+    options['initialfile'] = 'myfile.txt'
+    options['title'] = 'This is a title'
+
+
+    def __init__(self, root):
+        tk.Frame.__init__(self, root)
+
+        self.recommendation_table = None
+
+        self.samples_prefs = {}
+        self.transcript_prefs = {}
+
+        self.value_for_cf_type = tk.IntVar()
+        self.value_for_cf_type.set(1)  # initializing the choice, i.e. Python
+
+        self.value_for_similarity_measure = tk.StringVar()
+        self.value_for_similarity_measure.set("Pearson")  # initial value
+
+        tk.Label(root, text="Virtual Advisor v1.0", padx=20).pack(side=Tkconstants.TOP)
+
+        tk.Button(root, text='Load Past Student Grades', command=self.askForGradeSamples, justify=Tkconstants.LEFT).pack()
+        tk.Button(root, text='Load Your Current Transcript', command=self.askForTranscript, justify=Tkconstants.RIGHT).pack()
+
+        tk.Label(root, text="Collaborative Filtering Type:", justify=Tkconstants.LEFT, padx=20).pack()
+        tk.Radiobutton(root, text="User-based", padx=20, variable=self.value_for_cf_type, value=1).pack()
+        tk.Radiobutton(root, text="Item-based", padx=20, variable=self.value_for_cf_type, value=2).pack()
+
+        tk.Label(root, text="Similarity Measure:", justify=Tkconstants.LEFT, padx=20).pack()
+        tk.OptionMenu(root, self.value_for_similarity_measure, "Pearson", "Euclidean", "Jaccard").pack()
+
+        tk.Button(root, text='See the Recommended Courses', command=self.get_recommendations).pack(fill=Tkconstants.BOTH)
+
+
+    def get_letter_for(self, predicted_grade):
+        if predicted_grade &gt; 4: return "A+"
+        elif 4 &gt;= predicted_grade &gt; 3.7: return "A"
+        elif 3.7 &gt;= predicted_grade &gt; 3.3: return "A-"
+        elif 3.3 &gt;= predicted_grade &gt; 3.0: return "B+"
+        elif 3.0 &gt;= predicted_grade &gt; 2.7: return "B"
+        elif 2.7 &gt;= predicted_grade &gt; 2.3: return "B-"
+        elif 2.3 &gt;= predicted_grade &gt; 2.0: return "C+"
+        elif 2.0 &gt;= predicted_grade &gt; 1.7: return "C"
+        elif 1.7 &gt;= predicted_grade &gt; 1.3: return "C-"
+        elif 1.3 &gt;= predicted_grade &gt; 1.0: return "D+"
+        elif 1.0 &gt;= predicted_grade &gt; 0.5: return "D"
+        elif 0.5 &gt;= predicted_grade &gt; 0.1: return "D-"
+        elif 0.1 &gt;= predicted_grade: return "F"
+
+
+    def get_recommendations(self):
+        if not self.transcript_prefs or not self.samples_prefs:
+            tkMessageBox.showwarning("Warning", "Input files need to be provided first!!")
+        else:
+            prefs = {}
+            prefs.update(self.transcript_prefs)
+            prefs.update(self.samples_prefs)
+
+            similarity = self.value_for_similarity_measure.get()
+            if similarity == "Euclidean": similarity = recommendations.sim_distance
+            elif similarity == "Jaccard": similarity = recommendations.sim_jaccard
+            else: similarity = recommendations.sim_pearson
+
+            if self.value_for_cf_type.get() == 2:
+                itemsim = recommendations.calculateSimilarItems(prefs)
+                recommended_courses = recommendations.getRecommendedItems(prefs, itemsim, "student")
+            else:
+                recommended_courses = recommendations.getRecommendations(prefs, "student", similarity=similarity)
+
+            if not self.recommendation_table:
+                self.recommendation_table = RecommendationTable(self, 7, 2)
+                self.recommendation_table.pack(side="bottom", fill="x")
+                self.recommendation_table.set(0, 0, "Recommended Course")
+                self.recommendation_table.set(0, 1, "Predicted Grade")
+
+            print recommended_courses
+            for index, (predicted_grade, course) in enumerate(recommended_courses):
+                if index &gt;= 6:
+                    break
+                self.recommendation_table.set(index+1, 0, course)
+                self.recommendation_table.set(index+1, 1, ("%s (%.2f)" %(self.get_letter_for(predicted_grade),
+                                                                       predicted_grade)))
+
+
+    def askForTranscript(self):
+        # get filename
+        file_path = tkFileDialog.askopenfilenames(**self.file_opt)
+        print file_path
+
+        # open file on your own
+        if file_path:
+            prefs = self.loadGradeSamples(file_path, "student")
+            self.transcript_prefs.update(prefs)
+
+
+    def askForGradeSamples(self):
+        # get filename
+        file_paths = tkFileDialog.askopenfilenames(**self.file_opt)
+        print file_paths
+
+        # open file on your own
+        if file_paths:
+            prefs = self.loadGradeSamples(file_paths, "samples")
+            self.samples_prefs.update(prefs)
+
+
+    def loadGradeSamples(self, file_paths, student_name):
+        prefs = dict()
+        temp_student_name = student_name
+        for index, file_path in enumerate(file_paths):
+            if student_name != "student":
+                temp_student_name = student_name + str(index+1)
+            prefs[temp_student_name] = {}
+            book = open_workbook(file_path)
+            sheet = book.sheet_by_index(0)
+<a name="0"></a><font color="#FF0000"><a href="match79-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_2.gif" alt="other" border="0" align="left"></a>
+
+            for row_index in range(1, sheet.nrows):
+                course_code = sheet.cell(row_index,0).value
+                course_name = sheet.cell(row_index,1).value
+                letter = sheet.cell(row_index,2).value
+</font>                prefs[temp_student_name]["%s %s" %(course_code, course_name)] = self.letters_grades[letter]
+        return prefs
+
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    RecommendationUI(root).pack()
+    root.mainloop()
+</pre>
+
+</body>
+</html>

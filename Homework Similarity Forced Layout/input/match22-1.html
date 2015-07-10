@@ -1,0 +1,248 @@
+﻿<html>
+<head>
+<title>project/project28/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project39/<p><pre>
+&gt;&gt;&gt;&gt; file: beyzanur_kocak.py
+__author__ = 'beyzanurkocak'
+
+from recommendations import  *
+from Tkinter import *
+import ttk
+import tkFont
+from xlrd import open_workbook,cellname
+import Tkinter, Tkconstants, tkFileDialog
+
+
+#my backhand (functions)
+letter_grade = {"A+":4.1, "A":4.0, "A-":3.7, "B+":3.3,"B":3.0, "B-":2.7, "C+":2.3, "C":2.0, "C-":1.7,"D+":1.3, "D":1.0, "D-":0.5, "F":0.0}
+#my dataset==critics
+dataset = {}
+
+#function for load past student grades
+def load_past_student():
+    filenames = tkFileDialog.askopenfilenames(parent=tk,title='Choose a file')
+    a = tk.tk.splitlist(filenames) # it should be return a list not a string
+    for i in a:
+        book = open_workbook(i)
+        sheet = book.sheet_by_index(0)
+        student = "student" + str(i)
+        for row_index in range(sheet.nrows):
+                code = sheet.cell_value(row_index, 0)
+                lessons = sheet.cell_value(row_index, 1)
+                grade = str(sheet.cell_value(row_index, 2))
+                for letter in letter_grade:
+                    if letter == grade:
+                        grade = letter_grade[letter]
+                        dataset.setdefault(student,{})
+                        dataset[student][code+" "+lessons] = grade
+    return dataset
+
+#function for load current student's transcript
+def load_current_transcript():
+    filenames = tkFileDialog.askopenfilenames(parent=tk,title='Choose a file')
+    a = tk.tk.splitlist(filenames) # it should be return a list not a string
+    for i in a:
+        book = open_workbook(i)
+        sheet = book.sheet_by_index(0)
+        for row_index in range(sheet.nrows):
+            code = sheet.cell_value(row_index, 0)
+            lessons = sheet.cell_value(row_index, 1)
+            grade = str(sheet.cell_value(row_index, 2))
+            for letter in letter_grade:
+                    if letter == grade:
+                        grade = letter_grade[letter]
+                        dataset.setdefault("student",{})
+                        dataset["student"][code+" "+lessons] = grade
+    return dataset
+
+
+
+
+
+
+
+table_header = ['Recommended Course','Prediced Grade' ]
+reco_list =[]
+#function that transform grade array to letters using letter_grade dictionary
+def TransGradeToLetter(x):
+    liste = []
+    liste.append((x,))
+    for i in letter_grade.keys():
+        liste.append((letter_grade[i], i))
+        liste.sort()
+    index = liste.index((x,))
+    return liste[index+1][1]
+#
+# #make the recommendation list to the proper situtation like [lessons, (predicted letter, predicted grade)
+def RecoList(liste):
+    for i in range(len(liste)):
+        tuple=liste[i]
+        tuple1=(tuple[1],TransGradeToLetter(tuple[0])+" "+str(tuple[0]))
+        liste[i]=tuple1
+    return liste
+#the function sorts predicted grade from A+ to F
+def SortPredGrade(liste):
+    a = sorted(liste)
+    a.reverse()
+    reco_list.append(RecoList(a))
+
+#recommendation results according to user's choice
+def ChooseChoice():
+        itemMatch=calculateSimilarItems(dataset, n=6)
+        if value.get() == 'Euclidean'and v.get() == "1":
+            print dataset
+            print reco_list
+            liste = getRecommendations(dataset,"student",similarity=sim_distance)
+            SortPredGrade(liste)
+            #SortPredGrade(liste)
+        elif value.get() == "Pearson" and v.get() == "1":
+            liste=getRecommendations(dataset,"student",similarity=sim_pearson)
+            SortPredGrade(liste)
+        elif value.get() == 'Jaccard' and v.get() == "1":
+            liste=getRecommendations(dataset,"student",similarity= sim_jaccard2)
+            SortPredGrade(liste)
+        elif value.get() == 'Euclidean'and v.get() == "2":
+            topMatches(dataset, "student", n=6, similarity=sim_distance)
+            liste = getRecommendedItems(dataset, itemMatch, "student")
+            SortPredGrade(liste)
+        elif value.get() == "Pearson"and v.get() == "2":
+            topMatches(dataset, "student", n=6, similarity=sim_pearson)
+            liste = getRecommendedItems(dataset, itemMatch, "student")
+            SortPredGrade(liste)
+        elif value.get() == 'Jaccard'and v.get() == "2":
+            topMatches(dataset, "student", n=6, similarity=sim_jaccard2)
+            liste = getRecommendedItems(dataset, itemMatch, "student")
+            SortPredGrade(liste)
+
+#the function creates table
+def CreateTable():
+    if len(dataset) ==0:
+        a = Tk()
+        Label(a, text="Error\nYou must choose 1 and 2", width = 20, height = 4,).pack()
+        a.mainloop()
+    else:
+        ChooseChoice()
+        tk.wm_title("multicolumn ListBox")
+        McListBox()
+        del reco_list[:]
+
+
+#creating Tkinter
+tk = Tk()
+tk.tk_setPalette(background='white', foreground='black',
+               activeBackground='gray70')
+Label(tk, text = "Virtual Advisor").pack()
+tk.geometry("650x650+130+130")
+
+first=Label(tk,width=6,height=2)
+first.config(text="1",bg="royalblue3",fg="white")
+first.place(relx=0.01,rely=0.03)
+
+second=Label(tk,width=6,height=2)
+second.config(text="2",bg="royalblue3",fg="white")
+second.place(relx=0.36,rely=0.03)
+
+third=Label(tk,width=6,height=2)
+third.config(text="3",bg="royalblue3",fg="white")
+third.place(relx=0.01,rely=0.14)
+
+forth=Label(tk,width=6,height=2)
+forth.config(text="4",bg="royalblue3",fg="white")
+forth.place(relx=0.01,rely=0.30)
+
+buton1 = Button(tk, text= "Load Past Student", width = 22 , height = 2, command = load_past_student)
+buton1.config(bg="gray90")
+buton1.place(relx=0.09,rely=0.03)
+
+buton2 = Button(tk, text= "Load Your Current Transcript", width = 22 , height = 2, command = load_current_transcript)
+buton2.config(bg="gray90")
+buton2.place(relx=0.44,rely=0.03)
+
+
+w = Label(tk, text="Colloborative\nFiltering:", width = 71, height = 4, anchor="w")
+w.config(bg = "white")
+w.place(relx=0,rely=0.14)
+
+
+v=StringVar()
+v.set("1")
+a=Radiobutton(tk,text="user-based",variable=v,value="1").place(relx=0.159, rely=0.15)
+b=Radiobutton(tk,text="Item-based",variable=v ,value="2").place(relx=0.159,rely=0.185)
+
+
+
+y = Label(tk, text="Similarity Measure:")
+y.config(bg = "white")
+y.place(relx=0.35,rely=0.163)
+
+
+
+
+
+value = StringVar()
+box = ttk.Combobox(tk, textvariable=value, state='readonly',width=9)
+box['values'] = ('Pearson', 'Euclidean', 'Jaccard')
+box.set("Pearson")
+box.place(relx=0.52,rely=0.161)
+
+
+
+buton3 = Button(tk, text= "See the Recommended Course", width = 25 , height = 2, command = CreateTable)
+buton3.config(bg="gray90")
+buton3.place(relx=0.09,rely=0.30)
+
+<a name="2"></a><font color="#0000FF"><a href="match22-0.html#2" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_2_1.gif" alt="other" border="0" align="left"></a>
+
+class McListBox(object):
+    """use a ttk.TreeView as a multicolumn ListBox"""
+    def __init__(self):
+        self.tree = None
+        self._setup_widgets()
+        self._build_tree()
+    def _setup_widgets(self):
+        container = ttk.Frame()
+</font>        container.place(relx=0.1,rely=0.50)
+# create a treeview with dual scrollbars
+<a name="0"></a><font color="#FF0000"><a href="match22-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_10.gif" alt="other" border="0" align="left"></a>
+
+        self.tree = ttk.Treeview(columns=table_header, show="headings")
+        vsb = ttk.Scrollbar(orient="vertical",
+        command=self.tree.yview)
+        hsb = ttk.Scrollbar(orient="horizontal",
+        command=self.tree.xview)
+        self.tree.configure(yscrollcommand=vsb.set,
+        xscrollcommand=hsb.set)
+        self.tree.grid(column=0, row=0, sticky='nsew', in_=container)
+        vsb.grid(column=1, row=0, sticky='ns', in_=container)
+        hsb.grid(column=0, row=1, sticky='ew', in_=container)
+        container.grid_columnconfigure(0, weight=1)
+        container.grid_rowconfigure(0, weight=1)
+    def _build_tree(self):
+        for col in table_header:
+            self.tree.heading(col, text=col.title())
+# adjust the column's width to the header string
+            self.tree.column(col,
+</font>            width=tkFont.Font().measure(col.title()))
+        for item in reco_list:
+<a name="1"></a><font color="#00FF00"><a href="match22-0.html#1" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_1_3.gif" alt="other" border="0" align="left"></a>
+
+            for item1 in item:
+                self.tree.insert('', 'end', values=item1)
+# adjust column's width if necessary to fit each value
+                for ix, val in enumerate(item1):
+                    col_w = tkFont.Font().measure(val)
+                    if self.tree.column(table_header[ix],width=None)&lt;col_w:
+                        self.tree.column(table_header[ix], width=col_w)
+</font>tk.mainloop()
+
+
+
+
+
+</pre>
+
+</body>
+</html>

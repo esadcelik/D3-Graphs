@@ -1,0 +1,129 @@
+﻿<html>
+<head>
+<title>project/project18/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project8/<p><pre>
+&gt;&gt;&gt;&gt; file: sevde_selcuk.py
+__author__ = 'sevdeselcuk'
+from Tkinter import *
+from tkFileDialog   import askopenfilename
+import xlrd
+
+
+root = Tk()
+root.configure(background='powder blue')
+root.geometry("600x680")
+title=root.title("Virtual Advisor")
+file= Label (text="Virtual Advisor v1.0",font="Times 25 bold",bg="powder blue")
+file.place(relx=0.3, rely=0.1)
+
+def callback():
+    name= askopenfilename()
+    print name
+
+file_location1="/Users/sevdeselcuk/Desktop/Mini Project 1/SampleStudentGrades1.xlsx"
+workbook=xlrd.open_workbook(file_location1)
+sheet=workbook.sheet_by_index(0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,1)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,2)
+file_location2="/Users/sevdeselcuk/Desktop/Mini Project 1/SampleStudentGrades2.xlsx"
+workbook=xlrd.open_workbook(file_location2)
+sheet=workbook.sheet_by_index(0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,1)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,2)
+file_location3="/Users/sevdeselcuk/Desktop/Mini Project 1/SampleStudentGrades3.xlsx"
+workbook=xlrd.open_workbook(file_location3)
+sheet=workbook.sheet_by_index(0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,1)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,2)
+
+file_location4="/Users/sevdeselcuk/Desktop/Mini Project 1/SampleTranscript.xlsx"
+workbook=xlrd.open_workbook(file_location4)
+sheet=workbook.sheet_by_index(0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,0)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,1)
+for row in range(sheet.nrows):
+	print sheet.cell_value(row,2)
+
+
+button1=Button(text='Load Past Student Grades', command=callback)
+button1.place(relx=0.1, rely=0.2)
+button2=Button(text='Load Your Current Transcript', command=callback)
+button2.place(relx=0.6, rely=0.2)
+button3=Button(text="See the Recommended Courses")
+button3.place(relx=0.1, rely=0.45)
+
+
+frame = Frame(width=500, height=80, bg="tomato", colormap="new")
+frame.pack()
+frame.place(relx=0.1,rely=0.28)
+
+
+
+
+t1=Label(text="Similarity\n Measure:",font="Times 15",bg="tomato")
+t1.pack()
+t1.place(relx=0.54, rely=0.3)
+
+t2=Label(text="Collaborative\n Filtering Type:", font= "Times 15",bg="tomato")
+t2.pack()
+t2.place(relx=0.1, rely=0.3)
+
+#def sel():
+ #  selection = "You selected the option " + str(var.get())c
+   #label.config(text = selection)
+
+var = IntVar()
+R1 = Radiobutton(root, text="User-based", variable=var, value=1,bg="tomato")#command=sel)
+R1.pack( anchor = W )
+<a name="0"></a><font color="#FF0000"><a href="match63-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_4.gif" alt="other" border="0" align="left"></a>
+
+R1.place(relx=0.3, rely=0.3)
+
+R2 = Radiobutton(root, text="Item-based", variable=var, value=2, bg="tomato") #command=sel)
+</font>R2.pack( anchor = W )
+R2.place(relx=0.3, rely=0.34)
+
+
+
+
+
+
+OPTIONS = ["Pearson","Euclidean","Jaccard"]
+
+variable = StringVar(root)
+variable.set(OPTIONS[0]) # default value
+
+w = apply(OptionMenu, (root, variable) + tuple(OPTIONS))
+w.pack()
+w.place(relx=0.7, rely=0.3)
+
+class ExampleApp(Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        t = SimpleTable(self, 7,2)
+        t.place(relx=0.6,rely=0.5)
+        t.set(0,0,"Recommended Courses")
+        t.set(0,1,"Predicted Grade")
+
+mainloop()
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+﻿<html>
+<head>
+<title>project/project22/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project22/<p><pre>
+&gt;&gt;&gt;&gt; file: mustafa_celen.py
+# -*- coding: cp1254 -*-
+
+
+
+from Tkinter import *
+from xlrd import open_workbook,cellname
+import ttk,tkFileDialog
+from recommendations import * 
+
+
+lectureNotes = dict()
+
+
+noteMappingTable = {u'A+': 4.1,u'A': 4.0,u'A-': 3.7,u'B+': 3.3,u'B': 3.0,
+              u'B-': 2.7,u'C+': 2.3,u'C': 2.0,u'C-': 1.7,u'D+': 1.3,
+              u'D': 1.0,u'D-': 0.5,u'F': 0.0}
+
+def predict_note(r):
+    if 0&gt;r or r&gt;4.1:
+        return None
+    elif r&gt;4:
+        return "A+ (%.3g)"%(r)
+    elif 4&gt;=r&gt;3.7:
+        return "A (%.3g)"%(r)
+    elif 3.7&gt;=r&gt;3.3:
+        return "A- (%.3g)"%(r)
+    elif 3.3&gt;=r&gt;3.0:
+        return "B+ (%.3g)"%(r)    
+    elif 3.0&gt;=r&gt;2.7:
+        return "B (%.3g)"%(r)        
+    elif 2.7&gt;=r&gt;2.3:
+        return "B- (%.3g)"%(r)
+    elif 2.3&gt;=r&gt;2.0:
+        return "C+ (%.3g)"%(r)
+    elif 2.0&gt;=r&gt;1.7:
+        return "C (%.3g)"%(r)    
+    elif 1.7&gt;=r&gt;1.3:
+        return "C- (%.3g)"%(r)
+    elif 1.3&gt;=r&gt;1.0:
+        return "D+ (%.3g)"%(r)
+    elif 1.0&gt;=r&gt;0.5:
+        return "D (%.3g)"%(r)
+    elif 0.5&gt;=r&gt;0.1:
+        return "D- (%.3g)"%(r)
+    elif 0.1&gt;=r:
+        return "F (%.3g)"%(r)
+    else:
+        raise ValueError
+
+        
+def multi_loader():
+        filenames = tkFileDialog.askopenfilenames()
+        for i in filenames:
+                key = i.split("/")[-1].split(".")[0]
+                lectureNotes[key] = {}
+                book = open_workbook(i)
+                sheet = book.sheet_by_index(0)
+                """  in order to show what is happening..
+                print sheet.name
+                print sheet.nrows
+                print sheet.ncols
+                """
+                for row_index in range(1, sheet.nrows):
+                        #print "="*50   to seperate and understand what i'm going to have ..  
+                        lectureNotes[key][sheet.cell(row_index, 0).value + " " + sheet.cell(row_index, 1).value] = noteMappingTable[sheet.cell(row_index, 2).value]
+                        #for col_index in range(sheet.ncols):
+                                #print cellname(row_index,col_index),"-",
+                                #print sheet.cell(row_index,col_index).value
+        #print lectureNotes
+	
+	
+	
+def single_loader():
+        i = tkFileDialog.askopenfilename()
+        lectureNotes["user"] = {}
+        book = open_workbook(i)
+        sheet = book.sheet_by_index(0)
+        """     These guys helped me to show what was happening behind the code..
+                print sheet.name
+                print sheet.nrows
+                print sheet.ncols
+        """
+        for row_index in range(1, sheet.nrows):
+            #print "="*50
+            lectureNotes["user"][sheet.cell(row_index, 0).value + " " + sheet.cell(row_index, 1).value] = noteMappingTable[sheet.cell(row_index, 2).value]
+            #for col_index in range(sheet.ncols):
+            #print cellname(row_index,col_index),"-",
+            #        print sheet.cell(row_index,col_index).value
+        #print lectureNotes["user"]
+        
+def courses():
+        
+        if b.get() == 1:
+            # there are 3 possibilities in item based; but all are so close, then I used the same things for each of them..            
+            if a.get() == 'Pearson':
+                    scores= getRecommendations(lectureNotes, "user",similarity = sim_pearson)
+            elif a.get() == 'Euclidean':
+                    scores= getRecommendations(lectureNotes, "user",similarity = sim_distance)
+            elif a.get() == 'Jaccard':
+                    scores= getRecommendations(lectureNotes, "user",similarity = sim_jaccard2)
+        if b.get() == 2:
+            # there are also 3 possibilities in item-based filtering : Pearson,Eucledian, or Jaccard..
+            # for each, I used the functions from recommendations.py
+            if a.get() == 'Pearson':
+                    itemMatch = calculateSimilarItems(lectureNotes, n=10)
+                    scores= getRecommendedItems(lectureNotes, itemMatch, "user")
+            elif a.get() == 'Euclidean':
+                    itemMatch = calculateSimilarItems(lectureNotes, n=10)
+                    scores= getRecommendedItems(lectureNotes, itemMatch, "user")
+            elif a.get() == 'Jaccard':
+                    itemMatch = calculateSimilarItems(lectureNotes, n=10)
+                    scores= getRecommendedItems(lectureNotes, itemMatch, "user")
+        
+        #print sonuclar
+        
+        liste = Listbox()
+        liste.config(font="Verdana 11",bg=u"Light Blue") 
+        liste.place(relx=0.0,rely=0.45,width=275,height=220)
+        for score in scores[:6]:
+            #print i
+            liste.insert(END,score[1])
+            
+        liste2 = Listbox()
+        liste2.config(font="Verdana 11",bg=u"Light Blue")
+        liste2.place(relx=0.50,rely=0.45,width=275,height=220)
+        for score in scores[:6]:      
+            
+            #print i
+            #k = predict_note(i)
+            liste2.insert(END,predict_note(score[0]))
+        
+
+    
+# Then we create our ground..  
+pencere = Tk()
+pencere.config(bg = u"Dark Green")
+pencere.title(u"Welcome !")
+pencere.geometry("550x400+100+100")
+pencere.resizable(width = False,height = False)
+
+karsilama = Label(pencere)
+karsilama.config(text= u"Virtual Advisor 1.0 ",font = "Verdana 13",bg=u"Light Green" )
+karsilama.place(relx=0.35,rely=0.00)
+
+a = StringVar()
+kombo = ttk.Combobox(textvariable = a,values = ['Pearson','Euclidean','Jaccard'])
+kombo.place(relx=0.65,rely=0.21)
+kombo.set('Pearson')
+
+b = IntVar()
+radio = Radiobutton(text = "User-Based",variable = b,value = 1)
+radio.place(relx=0.25,rely=0.2)
+radio1 = Radiobutton(text = "Item-Based",variable = b,value = 2)
+radio1.place(relx=0.25,rely=0.25)
+b.set(1)
+
+etiket = Label(text="Collaborative\nFiltering Type:",bg=u"Grey")
+etiket.place(relx=0.1,rely=0.2)
+<a name="0"></a><font color="#FF0000"><a href="match81-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_2.gif" alt="other" border="0" align="left"></a>
+
+etiket2 = Label(text="Similarity\nMeasure:",bg=u"Grey")
+etiket2.place(relx=0.54,rely=0.2)
+
+buton = Button(pencere)
+buton.config(text = u"Load Past Student Grades",bg=u"Grey",command = multi_loader)
+</font>buton.place(relx=0.1,rely=0.1)
+
+buton = Button(pencere)
+buton.config(text = u"Load Your Current Transcript",bg=u"Grey",command = single_loader)
+buton.place(relx=0.6,rely=0.1)
+
+buton = Button(pencere)
+buton.config(text = u"See the Recommended Courses",bg=u"Grey",command = courses)
+buton.place(relx=0.1,rely=0.35)
+
+mainloop()
+</pre>
+
+</body>
+</html>

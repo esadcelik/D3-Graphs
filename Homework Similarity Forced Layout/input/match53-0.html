@@ -1,0 +1,205 @@
+﻿<html>
+<head>
+<title>project/project24/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project24/<p><pre>
+&gt;&gt;&gt;&gt; file: Min_Project1_Abdulmalek_Naes.py
+from Tkinter import *
+import ttk
+import tkFileDialog
+from tkMessageBox import *
+from recommendations import *
+from xlrd import open_workbook
+
+interface = Tk()
+box_value = StringVar()
+v=StringVar()
+trans_name=2    #global variable
+sample_names=1   #global variable
+
+def readfile(student):                  #This function is To read all files
+    gradedict={'A+':4.1,'A':4.0,'A-':3.7,'B+':3.3,'B':3.0,'B-':2.7,'C+':2.3,'C':2.0,'C-':1.7,'D+':1.3,'D':1,'D-':0.5,'F':0} #grade to mark
+    wb = open_workbook(student)     #open the file by using xlrd package
+    dictionary={}       #create 2 dictionary; one fore the file with its key and grade as "A, B+,C...." the other one is exactly as the same one but with marks as" 3,1, 1.8"
+    dictionary2={}
+<a name="0"></a><font color="#FF0000"><a href="match53-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_2.gif" alt="other" border="0" align="left"></a>
+
+    for s in wb.sheets():        #in this foor loop we read each line, and we make it one sentence, it contain the course id, course name and the grade
+        for row in range(s.nrows):
+            values = []
+            for col in range(s.ncols):      #this loop allow us to read the file line by line
+                values.append(s.cell(row,col).value)        #it read each cell seperatly
+</font>            a= ','.join(values)                             #it grouped the cell all together as a sentence and "," between each cell
+            (courseID, courseName,Grade)=a.split(',')       #we split the sentence to three variables so we can use them to modulate our dectionary
+            dictionary.setdefault(student,{})
+            dictionary2.setdefault(student,{})
+            dictionary[student][courseID+'| '+courseName]=Grade    #filling the first dictionary
+    for course in dictionary[student]:              #dectionary2 change the grade to mark so we can use them as what we have used in the critics "ratings"
+        for grade in gradedict:             #reading each key in the first dictionary and compare it with the obove dictionary which have the grades and maeks
+            if grade==dictionary[student][course]:
+                b=gradedict[grade]
+                dictionary2[student][course]=b  #filling the second dictionary with file name and the information inside it as a key
+
+    return dictionary2      #here is the dictionary that have the name of the file and the values in it"course name , course id and marks"
+
+def Current_Transcript():           #to open the file dialog for loading the transcipt of the student
+    trans_name=tkFileDialog.askopenfilename()
+    global trans_name       #I make it global to use it in the function of comparing it with the others
+
+def Student_Grades():               #to open file dialog for loading the past students results
+    sample_names=tkFileDialog.askopenfilenames()
+    global sample_names          #I make it global to use it in the function of comparing it with the others
+
+
+def the_whole_files_together(sample_names,trans_name):         #this function to put all file name in a list so we can use them fo make the completed dictionary
+    list=[]
+    for i in sample_names:
+        list.append(i)          #it add just the name of the file to a list so we will get a list fill of files name and the curent transcript file name
+    list.append(trans_name)
+    return list
+
+
+ #here is the function that create the dictionary which have all files name with their keys and values to be ready for using in the recommendation functions
+
+def StudentsInDictionary(readfile,the_whole_files_together):
+    dict={}     #here is the final step for making the dictionary it read the file and added to new dictionary
+    for item in the_whole_files_together(sample_names,trans_name):
+        a=readfile(item)
+        dict[item]=a[item]
+    return dict
+
+#this for loop that show the results at Tree view in a table when the user press "see the recommendation results"
+def for_loop(Var):
+    p=1
+    r=0
+    tree.delete(*tree.get_children())   #it delete anyresult in the tree and show the latest results
+    for i in Var:       #it convert the grade to mark an then it shows them as predicted grade
+        if p&lt;7:
+            b,a=i
+            mark=str(b)
+            if b&gt;4:
+                b='A+'
+            elif b&lt;=4.0 and b&gt;3.7:
+                b='A'
+            elif b&lt;=3.7 and b&gt;3.3:
+                b='A-'
+            elif b&lt;=3.3 and b&gt;3.0:
+                b='B+'
+            elif b&lt;=3.0 and b&gt;2.7:
+                b='B'
+            elif b&lt;=2.7 and b&gt;2.3:
+                b='B-'
+            elif b&lt;=2.3 and b&gt;2.0:
+                b='C+'
+            elif b&lt;=2.0 and b&gt;1.7:
+                b='C'
+            elif b&lt;=1.7 and b&gt;1.3:
+                b='C-'
+            elif b&lt;=1.3 and b&gt;1.0:
+                b='D+'
+            elif b&lt;=1.0 and b&gt;0.5:
+                b='D'
+            elif b&lt;=0.5 and b&gt;0.1:
+                b='D-'
+            else:
+                b='F'
+            splitt=a.split('|')         #this splet sentence for getting the course name seperated from the file name since we join them before
+            tree.insert("" , p,    text=splitt[1], values=(splitt[0],b,mark[0:4]))  #show the first 6 results
+            p=p+1
+
+
+
+def User_Based(StudentsInDictionary, trans_name, box_value):    #this function choose the exact function when the user choose any sort of "similarity  measure" under user_based
+    if (box_value.get())=='Pearson':
+        resultUser = getRecommendations(StudentsInDictionary(readfile,the_whole_files_together), trans_name, similarity=sim_pearson)
+    elif (box_value.get())=='Euclidean':
+        resultUser = getRecommendations(StudentsInDictionary(readfile,the_whole_files_together), trans_name, similarity=sim_distance)
+    elif  (box_value.get())=='Jaccard':
+        resultUser = getRecommendations(StudentsInDictionary(readfile,the_whole_files_together), trans_name, similarity=sim_jaccard2)
+    for_loop(resultUser)
+
+def calculateItems(prefs, n=10,similar=sim_pearson):    #this is exactly the same as "calculateSimilarItems" in recommendation file but this one hase one more variable which will allow it to find the item based by using also the three similarity measure
+    result = {}
+    itemPrefs = transformPrefs(prefs)
+    c = 0
+    for item in itemPrefs:
+        c += 1
+        if c % 100 == 0: print "%d / %d" % (c, len(itemPrefs))
+        # Find the most similar items to this one
+        scores = topMatches(itemPrefs, item, n=n, similarity=similar)
+        result[item] = scores
+    return result
+
+def Item_Based(StudentsInDictionary, trans_name): #this function choose the exact function when the user choose any sort of "similarity  measure" under item_based
+    if (box_value.get())=='Pearson':
+        itemMatch= calculateItems(StudentsInDictionary(readfile,the_whole_files_together), n=10,similar=sim_pearson)
+        resultItem = getRecommendedItems(StudentsInDictionary(readfile,the_whole_files_together), itemMatch, trans_name)
+    elif (box_value.get())=='Euclidean':
+        itemMatch= calculateItems(StudentsInDictionary(readfile,the_whole_files_together), n=10,similar=sim_distance)
+        resultItem = getRecommendedItems(StudentsInDictionary(readfile,the_whole_files_together), itemMatch, trans_name)
+    elif  (box_value.get())=='Jaccard':
+        itemMatch= calculateItems(StudentsInDictionary(readfile,the_whole_files_together), n=10,similar=sim_jaccard)
+        resultItem = getRecommendedItems(StudentsInDictionary(readfile,the_whole_files_together), itemMatch, trans_name)
+    for_loop(resultItem)
+
+
+
+def The_result_function():          #here is the function that do all the result by pressing the "see the recommendation result
+    if sample_names==1 and trans_name==2:   #this is the warning messeage that appears when the user doesnt upload the files
+        showwarning('warning','Please load "Past student grades" and your "Curent Trascript".')
+    elif sample_names==1 and trans_name!=2:
+        showwarning('warning','Please load "Past student grades".')
+    elif sample_names!=1 and trans_name==2:
+        showwarning('warning','Please load your "Curent Trascript".')
+    else:
+        if (v.get())=='1':      #the value of the radio button whither it is user based or item based
+            User_Based(StudentsInDictionary,trans_name,box_value)
+        elif (v.get())=='2':
+            Item_Based(StudentsInDictionary,trans_name)
+
+
+
+def draw_interface(interface):      #The interface window which contain labels, treeView, buttons and canvas
+        interface.geometry('500x550+300+30')    #size and the location of the main window
+        interface.title('Mini_Project_1')
+        lable=Label(text='  Vertual Advisor V1.0  ',fg='white',bg='black',font=('Vertual Advisor V1.0', 40)).pack()
+        Label(text=' 1 ',fg='black',bg='red',font=('1', 13)).place(x=25,y=100)  #the numbers of buttons
+        Label(text=' 2 ',fg='black',bg='red',font=('2', 13)).place(x=275,y=100) #the numbers of buttons
+        Label(text=' 3 ',fg='black',bg='red',font=('3', 13)).place(x=25,y=260)  #the numbers of buttons
+        lableName=Label(text=' By: ABDUL MALEK NAES  ||212332520||',fg='black',bg='orange',font=('By: ABDUL MALEK NAES 212332520', 14)).pack()
+        rec = Canvas(interface, width=500, height=200)  #for decorating the window with a white rectangle that group radiobuttons and the Combobox
+        rec.create_rectangle(0, 0, 510, 100, fill="white", outline = 'red')
+        rec.place(x=-2,y=150)
+        Label(text=' 3 ',fg='black',bg='red',font=('3', 13)).place(x=25,y=260)
+        button1=Button(text='Load Past Student Grades',fg='black',bg='green', command=Student_Grades).place(x=50,y=100)
+        button2=Button(text='Load Your Current Transcript',fg='black',bg='green',command=Current_Transcript).place(x=300,y=100)
+        box = ttk.Combobox(interface, textvariable=box_value)   #the Combo box that show the three similarity measure option
+        box['values'] = ('Pearson', 'Euclidean', 'Jaccard')
+        box.current(0)
+        box.place(x=300,y=185)
+        label2=Label(text='Similarity Measure :',bg='white').place(x=300,y=160)
+        label3=Label(text='Collaporative Filtering Type: ',bg='white').place(x=25,y=160)
+        radio1=Radiobutton(interface, text="User-based", variable=v, value=1,bg='white').place(x=25,y=185)
+        radio2=Radiobutton(interface, text="Item-based", variable=v, value=2,bg='white').place(x=25,y=210)
+        v.set(1)        #it set the parses as default to user_based
+        tree = ttk.Treeview(interface)      #the output window
+        tree["columns"]=("one","two","three")
+        tree.column("one", width=100 )  #the first column variables
+        tree.column("two", width=50)    #the first column variables
+        tree.column("three", width=100 )    #the first column variables
+        tree.heading("one", text="Course ID")
+        tree.heading("two", text="Grade")
+        tree.heading("three", text="Predicted Grade")
+        tree.place(x=25,y=300)
+        global tree     #i MAKE IT GLOBAL so we will be able to use it while filling it with the results
+        button3=Button(text=' See the recommended courses',fg='black',bg='yellow',command=The_result_function).place(x=50,y=260)
+        interface.mainloop()    #it is the key for the interface window to work :)
+
+
+draw_interface(interface)
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+﻿<html>
+<head>
+<title>project/project10/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project10/<p><pre>
+&gt;&gt;&gt;&gt; file: Selcuk_Sivrioglu_Yasir_Bali_.py
+from Tkinter import *
+from tkFileDialog import askopenfilenames
+import xlrd
+from xlrd import open_workbook
+import recommendations
+
+pencere = Tk()
+pencere.title("Virtual Advisor v1.0")
+
+#load past student grades
+file_name1 = {}
+filename=''
+def student_grades_load():
+    global filename
+    filename = askopenfilenames(*file_name1)
+    filename = filename[1:-1]
+
+from xlrd import open_workbook,cellname
+def reading_studentgrades():
+    book = open_workbook(filename)
+    sheet = book.sheet_by_index(0)
+    print sheet.name
+    print sheet.nrows
+    print sheet.ncols
+    for row_index in range(sheet.nrows):
+        for col_index in range(sheet.ncols):
+            print cellname(row_index,col_index),'-',
+            print sheet.cell(row_index,col_index).value
+
+
+#load transcript
+file_name2 = {}
+filenamee=''
+def transcript_load():
+    global filenamee
+    filenamee = askopenfilenames(*file_name2)
+    filenamee = filenamee[1:-1]
+
+
+def reading_transcript():
+    book = open_workbook(filenamee)
+    sheet = book.sheet_by_index(0)
+    print sheet.name
+    print sheet.nrows
+    print sheet.ncols
+    for row_index in range(sheet.nrows):
+        for col_index in range(sheet.ncols):
+            print cellname(row_index,col_index),'-',
+            print sheet.cell(row_index,col_index).value
+
+
+#load buttons
+pencere.geometry("300x240")
+dugme = Button(text= "Load Past Students Grades",  command=student_grades_load)
+dugme.pack()
+dugme2 = Button(text="Load Your Current Trancript",command=transcript_load)
+dugme2.pack(side=TOP)
+
+#Butonlar 1
+def item_based():
+   print 'yasir'
+
+def user_based():
+    print 'selcuk'
+
+
+Label(pencere,
+      text="""Collaborative Filtering Type:""",
+      justify = LEFT,
+<a name="0"></a><font color="#FF0000"><a href="match90-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_5.gif" alt="other" border="0" align="left"></a>
+
+      padx = 20).pack()
+
+var = IntVar()
+
+R1 = Radiobutton(pencere, text="item-based", variable=var, value=1,
+                  command=item_based)
+R1.pack( side = TOP)
+</font>
+R2 = Radiobutton(pencere, text="user-based", variable=var, value=2,
+                  command=user_based)
+R2.pack( side=TOP )
+
+
+#Butonlar 2
+
+def sim_pearson(prefs, p1, p2):
+    recommendations.sim_pearson()
+
+def sim_euclidean(prefs, person1, person2):
+    recommendations.sim_distance()
+
+def sim_jaccard(prefs, genre1, genre2):
+    recommendations.sim_jaccard()
+
+Label(pencere,
+      text="""Similarity Measure:""",
+      justify = LEFT,
+      padx = 20).pack()
+
+var = IntVar()
+
+R1 = Radiobutton(pencere, text="Pearson", variable=var, value=1,
+                  command=sim_pearson)
+R1.pack( side = TOP)
+
+R2 = Radiobutton(pencere, text="Euclidian", variable=var, value=2,
+                  command=sim_euclidean)
+R2.pack( side=TOP )
+
+R3 = Radiobutton(pencere, text="Jaccard", variable=var, value=3,
+                  command=sim_jaccard)
+R3.pack( side=TOP)
+
+
+#recommend button
+def see_recommend():
+    print 'Recommended Courses are:'
+
+dugme3 = Button(text="See the Recommended Courses",command=see_recommend)
+dugme3.pack(side=TOP)
+
+
+mainloop()
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+﻿<html>
+<head>
+<title>project/project40/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project40/<p><pre>
+&gt;&gt;&gt;&gt; file: Ahsen_Surucu.py
+__author__ = 'ahsensurucu-212991382'
+from Tkinter import *
+from Tkconstants import *
+import tkFileDialog
+import tkFont
+import ttk
+from xlrd import open_workbook,cellname
+from recommendations import*
+class Courses(object):
+    def __init__(self):
+        self.etiket1 = Label(text="Virtual Advisor v1.0",relief=SUNKEN,font="Times 20 bold",
+                            fg="black",
+                            bg="light blue",padx=300)
+        self.etiket1.pack(fill="x")
+        self.etiket2=Label(text="Collaborative\nFiltering Type:",bg="white",font="Times 16")
+        self.etiket2.place(relx=0.02,rely=0.40)
+        self.etiket3=Label(text="Similarity\nMeasure:",bg="white",font="Times 16")
+        self.etiket3.place(relx=0.53,rely=0.40)
+        self.button1=Button(text="Load Past Student Grades", font="Times 16 bold",
+                            bg="grey",justify="left",anchor="n", command=grades)
+        self.button1.place(x=10,y=100)
+        self.button2=Button(text="Load Your Current Transcript", font="Times 16 bold",
+                            bg="grey",justify="right",command=transcript)
+        self.button2.place(x=500,y=100)
+        self.button4=Button(text="See the Recommended Courses",
+                            font="Times 16 bold",bg="grey",command=lambda:recommending(self))
+        self.button4.place(relx=0.02,rely=0.60)
+
+        self.x=IntVar()
+        Radiobutton(pencere, text="user-based", variable=self.x,value=0).place(relx=0.23,rely=0.40)
+        Radiobutton(pencere,text="item-based",variable=self.x,value=1).place(relx=0.23,rely=0.45)
+        self.y=StringVar()
+        options=["Pearson", "Euclidean", "Jaccard"]
+        combo=ttk.Combobox(width=8,textvariable=self.y)
+        combo["values"]=("Pearson","Euclidean","Jaccard")
+        combo.set(" ")
+        combo.place(relx=0.69,rely=0.43)
+        bottomframe = Frame(pencere)
+        bottomframe.pack( side = BOTTOM )
+
+def recommending(self):
+    total()
+    if self.x.get()==0 and self.y.get()=="Euclidean":
+        result = getRecommendations(totalgrades,"Me",similarity=sim_distance)
+        for key, value in result:
+            pass
+        result.append(result)
+        print result
+    elif self.x.get()==0 and self.y.get()=="Pearson":
+        result=getRecommendations(totalgrades,"Me",similarity=sim_pearson)
+        for key, value in result:
+            pass
+        print result
+
+    elif self.x.get()==0 and self.y.get()=="Jaccard":
+        result=getRecommendations(totalgrades,"Me",similarity=sim_pearson)
+        for key, value in result:
+            pass
+        print result
+    elif self.x.get()==1 and self.y.get()=="Euclidean":
+        result=topMatches(totalgrades,"Me",similarity=sim_distance)
+        result=calculateSimilarItems(totalgrades,n=10)
+        result=getRecommendedItems(totalgrades,result,"Me")
+        print result
+    elif self.x.get()==1 and self.y.get()=="Pearson":
+        result=topMatches(totalgrades,"Me",similarity=sim_pearson)
+        result=calculateSimilarItems(totalgrades,n=10)
+        result=getRecommendedItems(totalgrades,result,"Me")
+        print result
+    elif self.x.get()==1 and self.y.get()=="Jaccard":
+        result=topMatches(totalgrades,"Me",similarity=sim_jaccard2)
+        result=calculateSimilarItems(totalgrades,n=10)
+        result=getRecommendedItems(totalgrades,result,"Me")
+        print result
+
+gradelist={}
+def grades():
+    file=tkFileDialog.askopenfilenames(parent=pencere)
+    x=pencere.tk.splitlist(file)
+    y=0
+    for i in range(3):
+        grade=open_workbook(x[i])
+        sheet=grade.sheet_by_index(0)
+        y+=1
+        student=str(y)
+        for row in range(1, sheet.nrows):
+            code=sheet.cell_value(row,0)
+            lesson=sheet.cell_value(row,1)
+            grade=sheet.cell_value(row,2)
+            for i in letters:
+                if i==grade:
+                    grade=letters[i]
+            for i in lesson:
+                gradelist.setdefault(student,{})
+                gradelist[student][lesson+code]=grade
+    print gradelist
+
+trans={}
+def transcript():
+    file=tkFileDialog.askopenfilename(parent=pencere)
+    g=open_workbook(file)
+    s=g.sheet_by_index(0)
+    for row in range(s.nrows):
+            person=str(row)
+            lesson=s.cell_value(row,1)
+            code=s.cell_value(row,0)
+            grade=s.cell_value(row,2)
+
+            for i in letters:
+                if i==grade:
+                    grade=letters[i]
+                    trans.setdefault(lesson+code," ")
+                    trans[lesson+code]=grade
+    print trans
+
+totalgrades={}
+def total():
+    for i in gradelist:
+          if i not in totalgrades:
+              totalgrades[i]=gradelist[i]
+    totalgrades["Me"]=trans
+    print totalgrades
+
+def lettergrades():
+    pass
+
+class Tablo(object):
+    def __init__(self):
+        self.tree = None
+        self._setup_widgets()
+        self._build_tree()
+    def _setup_widgets(self):
+        s = """\
+click on header to sort by that column
+to change width of column drag boundary
+        """
+        msg = ttk.Label(wraplength="4i", justify="left", anchor="n",
+            padding=(10, 2, 10, 6), text=s)
+        msg.pack(fill='x')
+        container = ttk.Frame()
+        container.pack(fill='both', expand=True)
+
+        self.tree = ttk.Treeview(columns=header, show="headings")
+        vsb = ttk.Scrollbar(orient="vertical",
+            command=self.tree.yview)
+        hsb = ttk.Scrollbar(orient="horizontal",
+<a name="0"></a><font color="#FF0000"><a href="match67-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_1.gif" alt="other" border="0" align="left"></a>
+
+            command=self.tree.xview)
+        self.tree.configure(yscrollcommand=vsb.set,
+            xscrollcommand=hsb.set)
+        self.tree.grid(column=0, row=0, sticky='nsew', in_=container)
+</font>        vsb.grid(column=1, row=0, sticky='ns', in_=container)
+        hsb.grid(column=0, row=1, sticky='ew', in_=container)
+        container.grid_columnconfigure(0, weight=1)
+        container.grid_rowconfigure(0, weight=1)
+    def _build_tree(self):
+        for col in header:
+            self.tree.heading(col, text=col.title(),
+                command=lambda c=col: sortby(self.tree, c, 0))
+
+            self.tree.column(col,
+                width=tkFont.Font().measure(col.title()))
+            result=[]
+        for item in result:
+            self.tree.insert('', 'end', values=item)
+
+            for ix, val in enumerate(item):
+                col_w = tkFont.Font().measure(val)
+                if self.tree.column(header[ix],width=None)&lt;col_w:
+                    self.tree.column(header[ix], width=col_w)
+def sortby(tree, col, descending):
+
+    data = [(tree.set(child, col), child) \
+        for child in tree.get_children('')]
+
+    data.sort(reverse=descending)
+    for ix, item in enumerate(data):
+        tree.move(item[1], '', ix)
+
+    tree.heading(col, command=lambda col=col: sortby(tree, col, \
+        int(not descending)))
+
+header = ['Recommended Course', 'Predicted Grade']
+result=[]
+root = Tk()
+root.wm_title()
+Table = Tablo()
+root.mainloop()
+pencere = Tk()
+title = pencere.title("Ahsen Surucu")
+pencere.geometry("800x600+100+50")
+letters={"A+":4.1,"A":4.0,"A-":3.7,"B+":3.3,"B":3.0,"B-":2.7,"C+":2.3,"C":2.0,"C-":1.7,"D+":1.3,"D":1.0,"D-":0.5,"F":0.0}
+uyg = Courses()
+frame=Frame(pencere)
+pencere.tk_setPalette("light blue")
+mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+</body>
+</html>

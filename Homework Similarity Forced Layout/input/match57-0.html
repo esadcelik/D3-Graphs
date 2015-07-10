@@ -1,0 +1,160 @@
+﻿<html>
+<head>
+<title>project/project13/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project13/<p><pre>
+&gt;&gt;&gt;&gt; file: mustafa_bal_melik_daye.py
+# Mustafa Bal - 212062269
+# Melik Ahmet Daye - 212022438
+
+import Tkinter
+import Tkconstants
+import tkFileDialog
+import ttk
+from xlrd import *
+from Tkinter import *
+from recommendations import *
+
+class TkFileDialogExample(Tkinter.Frame):
+
+  def __init__(self, root):
+    self.d={}
+    Tkinter.Frame.__init__(self, root)
+
+    # options for buttons
+    button_opt = {'fill': Tkconstants.BOTH, 'padx': 10, 'pady': 10}
+
+    # define buttons
+    Tkinter.Label(self,text='Virtual Advisor v1.0',width=100).pack(**button_opt)
+    Tkinter.Label(self,text='By Mustafa Bal & Melik Ahmet Daye',width=100).pack(**button_opt)
+    Tkinter.Button(self, text='Load Past Student Grades', command=self.askopenfilename).pack(**button_opt)
+    Tkinter.Button(self, text= 'Load Your Current Transcript',command=self.trans).pack(**button_opt)
+    Tkinter.Radiobutton(self, text="User-based", value=1,command=self.radiobutton).pack(anchor=W)
+    Tkinter.Radiobutton(self, text="Item-based", value=2,command=self.radiobutton).pack(anchor=W)
+    self.box = ttk.Combobox(self)
+    self.box['values']=['Pearson','Euclidean','Jaccard']
+    self.box.current(0)
+    self.box.pack(**button_opt)
+    Tkinter.Button(self, text='See The Recommended Courses').pack(**button_opt)
+
+
+  def askopenfilename(self):
+    filename = tkFileDialog.askopenfilenames(parent=root)
+    map(str,filename)
+    for file in filename:
+        if file:
+            for index in range(len(filename)):
+                book = open_workbook(str(file))
+                sheet = book.sheet_by_index(0)
+<a name="0"></a><font color="#FF0000"><a href="match57-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_4.gif" alt="other" border="0" align="left"></a>
+
+                for row_index in range(sheet.nrows):
+                    a=[]
+                    for col_index in range(sheet.ncols):
+                        a.append(sheet.cell(row_index,col_index).value)
+                    x=','.join(a)
+</font>                    self.d.setdefault(str(file),{})
+                    (code,title,grade)= str(x).split(',')
+                    for i in range(len(self.d)):
+                       if  grade=='A+':
+                           grade = 4.1
+                       if grade =='A':
+                           grade = 4
+                       if grade =='A-':
+                           grade = 3.7
+                       if grade =='B+':
+                           grade = 3.3
+                       if grade == 'B':
+                           grade = 3
+                       if grade == 'B-':
+                           grade = 2.7
+                       if grade == 'C+':
+                           grade = 2.3
+                       if grade == 'C':
+                           grade = 2
+                       if grade == 'C-':
+                          grade = 1.7
+                       if grade == 'D+':
+                          grade = 1.3
+                       if grade == 'D':
+                          grade = 1
+                       if grade == 'D-':
+                          grade = 0.5
+                       if grade =='F':
+                          grade = 0
+
+                    self.d[str(file)][code + ' ' + title]=grade
+    print self.d
+
+  def trans(self):
+      filename = tkFileDialog.askopenfilename(parent=root)
+      if filename:
+            book = open_workbook(str(filename))
+            for sheet in book.sheets():
+                for row_index in range(sheet.nrows):
+                    a=[]
+                    for col_index in range(sheet.ncols):
+                        a.append(sheet.cell(row_index,col_index).value)
+                    x=','.join(a)
+                    self.d.setdefault(str(filename),{})
+                    (code,title,grade)= str(x).split(',')
+                    self.trans=filename
+
+                    for i in range(len(self.d)):
+                       if  grade=='A+':
+                           grade = 4.1
+                       if grade =='A':
+                           grade = 4
+                       if grade =='A-':
+                           grade = 3.7
+                       if grade =='B+':
+                           grade = 3.3
+                       if grade == 'B':
+                           grade = 3
+                       if grade == 'B-':
+                           grade = 2.7
+                       if grade == 'C+':
+                           grade = 2.3
+                       if grade == 'C':
+                           grade = 2
+                       if grade == 'C-':
+                          grade = 1.7
+                       if grade == 'D+':
+                          grade = 1.3
+                       if grade == 'D':
+                          grade = 1
+                       if grade == 'D-':
+                          grade = 0.5
+                       if grade =='F':
+                          grade = 0
+
+                    self.d[str(filename)][code + ' ' + title]=grade
+      print self.d
+
+  def radiobutton(self):
+      return getRecommendations(self.d,self.trans,similarity=sim_pearson)
+
+  # def boxbuttonpearson(self):
+  #     return sim_pearson
+  #
+  # def boxbuttoneuclidean(self):
+  #     return sim_distance
+  #
+  # def boxbuttonjaccard(self):
+  #     return sim_jaccard
+  #
+  # def recommendationbutton(self):
+  #     print topMatches
+
+
+if __name__=='__main__':
+  root = Tkinter.Tk()
+  root.geometry("500x500")
+  TkFileDialogExample(root).pack()
+  root.mainloop()
+</pre>
+
+</body>
+</html>

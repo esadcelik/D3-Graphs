@@ -1,0 +1,274 @@
+﻿<html>
+<head>
+<title>project/project25/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project41/<p><pre>
+&gt;&gt;&gt;&gt; file: asad_boolani.py
+from Tkinter import *
+from tkFileDialog import * 
+import ttk
+from recommendations import *
+import tkMessageBox
+
+
+#These are global variables; designed to keep track of the program
+root=None
+maindict=None
+transcript=None
+counter=0
+
+similarity_measure='sim_pearson'
+filter_type='user'
+global_rank=None
+
+class GradesLoader(Frame):
+   #Class for getting the excel files and processing them into dictionries
+   def __init__(self,parent):
+      Frame.__init__(self,parent)
+      self.parent=parent    
+      
+      self.button_past=ttk.Button(text='Load Past Student Grades',command=self.openfile_pgl)
+      self.button_past.grid()
+      self.tl=''
+      self.pl=''
+      self.button_transcipt=ttk.Button(text='Load your current transcript',command=self.openfile_tl)
+      self.button_transcipt.grid()      
+            
+   def openfile_pgl(self):
+      ftypes=[('Excel Files','*.xlsx')]      
+      self.pl=askopenfilename(filetypes=ftypes,title='Choose a file',multiple=1)      
+      global maindict      
+      maindict=self.dict_builderp(self.pl)
+            
+      
+   def dict_builderp(self,file_list):                          
+      from mmap import mmap,ACCESS_READ
+      from xlrd import open_workbook,XL_CELL_TEXT  
+      encoded_list=[each.encode('ascii','ignore') for each in file_list]
+      
+      main_dict={}
+      for i in range( len(file_list)):        
+      
+         wb=open_workbook(file_list[i])
+         sheet=wb.sheet_by_index(0)
+         current='student'+str(i)
+         main_dict[current]={}
+         for i in range(1,sheet.nrows):
+            key=sheet.cell(i,0).value.encode('ascii','ignore')
+            value=sheet.cell(i,2).value.encode('ascii','ignore')
+            main_dict[current][key]=self.inverse_grade_finder(value)
+        
+      return main_dict   
+            
+   def dict_buildertl(self,file_list):                          
+      from mmap import mmap,ACCESS_READ
+      from xlrd import open_workbook,XL_CELL_TEXT  
+      
+      encoded_list=file_list.encode('ascii','ignore') 
+<a name="1"></a><font color="#00FF00"><a href="match29-0.html#1" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_1_2.gif" alt="other" border="0" align="left"></a>
+
+      main_dict={}
+                 
+      wb=open_workbook(encoded_list)
+      sheet=wb.sheet_by_index(0)       
+      for i in range(1,sheet.nrows):    
+         key=sheet.cell(i,0).value.encode('ascii','ignore')
+</font>         value=sheet.cell(i,2).value.encode('ascii','ignore')
+         main_dict[key]=self.inverse_grade_finder(value)        
+      return main_dict
+   
+   def openfile_tl(self):
+         ftypes=[('Excel Files','*.xlsx')]      
+         self.tl=askopenfilename(filetypes=ftypes,title='Choose a file')   
+         global transcript      
+         transcript=self.dict_buildertl(self.tl)
+            
+   
+   def inverse_grade_finder(self,grade):
+      grades_to_num={}
+      grades_list=['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F']
+      input_map=[4.1,4,3.7,3.3,3,2.7,2.3,2,1.7,1.3,1,0.5,0]
+      grades_to_num=dict(zip(grades_list,input_map))    
+      return grades_to_num[grade]   
+
+   
+class Recommendations(Frame):  
+          
+   def __init__(self,parent):
+      Frame.__init__(self,parent)
+      self.parent=parent
+      self.button=ttk.Button(text='See the Recommended Grades',command=self.button)
+      self.button.grid()
+      
+      
+   def button(self):
+      global maindict
+      global similarity_measure
+      global transcript
+      global filter_type
+      if maindict==None and transcript==None:
+               tkMessageBox.showerror("Please select your files", "Please select your files")      
+      else:
+         maindict=self.combine(maindict,transcript)
+         self.rec_generator(maindict,)
+   
+   def combine(self,dict1,dict2):    
+      dict1['user']=dict2
+      return dict1  
+   
+   def rec_generator(self,main):
+         global global_rank
+         global root
+         global counter
+         global filter_type
+         global similarity_measure
+         
+         if counter!=0:
+                     self.t.destroy()         
+         if filter_type=='user':
+            rank=getRecommendations(main,'user',similarity_measure)                       
+            global_rank=rank
+            
+         elif filter_type=='item':
+            item_match= calculateSimilarItems(main,6)
+            global_rank=getRecommendedItems(main, item_match, 'user')            
+         
+            
+         self.t=Table(root,7,2)
+         self.t.grid()            
+         self.t.set(0,0,"Recommended Courses")
+         self.t.set(0,1,"Predicted Grades")              
+         for i in range(11): 
+            a= global_rank[i][1] 
+            b=self.grade_finder(global_rank[i][0])+"("+str(global_rank[i][0])+")"
+            self.t.set(i+2,0,a)
+            self.t.set(i+2,1,b)   
+         counter+=1   
+         
+         
+   
+   def grade_finder(self,input):
+      list=[(3.7,4.0),(3.3,3.7),(3.0,3.3),(2.7,3.0),(2.3,2.7),(2.0,2.3),(1.7,2.0),(1.3,1.7),(1.0,1.3),(0.5,1.0),(0.1,0.5)]
+      grades=['A','A-','B+','B','B-','C+','C','C-','D+','D','D-']
+      num_to_grades=dict(zip(list,grades))    
+      if input&gt;4:
+         return 'A+'
+      elif input&lt;=0.1:
+         return 'F'
+      
+      else:
+         
+         a=[v for (k,v) in num_to_grades.iteritems() if k[0]&lt;input&lt;= k[1]]
+         return a[0]
+   
+
+   
+
+      
+      
+class Filter(Frame):
+   def __init__(self,parent):
+      Frame.__init__(self,parent)
+      self.parent=parent 
+      
+      self.label2=ttk.Label(text='Virtual Advisor v1.0').grid()
+      self.label2=ttk.Label(text="Collabrative Filtering Type")
+      
+      
+      self.label2.grid()
+          
+      
+      self.order = StringVar()
+      self.measure=StringVar()
+      self.euclidian=ttk.Radiobutton( text='Euclidian Distance', variable=self.measure, value='sim_distance',command=self.radio_similar)
+      self.jaccard=ttk.Radiobutton( text='Jaccard', variable=self.measure, value='sim_jaccard',command=self.radio_similar)
+      self.pearson=ttk.Radiobutton( text='Pearson', variable=self.measure, value='sim_pearson',command=self.radio_similar)
+      
+      self.item_based = ttk.Radiobutton( text='Item-Based', variable=self.order, value='item',command=self.radio)
+      self.user_based = ttk.Radiobutton( text='User-Based', variable=self.order, value='user',command=self.radio)           
+      self.item_based.grid()      
+      self.user_based.grid()
+      self.label=ttk.Label(text='Please select a similarity measure')
+      self.label.grid()       
+      self.euclidian.grid()
+      self.jaccard.grid()
+      self.pearson.grid()
+      
+      
+      self.label.grid(sticky='W')
+
+   
+
+   def radio(self):
+      global filter_type
+      if self.order.get()=='item':         
+         filter_type ="item"
+      if self.order.get()=='user':
+         filter_type = "user"
+   def radio_similar(self):
+      global similarity_measure
+      if self.measure.get()=='sim_distance':         
+         similarity_measure =sim_distance
+      if self.measure.get()=='sim_jaccard':
+         similarity_measure = sim_jaccard2  
+      if self.measure.get()=='sim_pearson':
+         similarity_measure = sim_pearson 
+
+class Table(Frame):    
+    def __init__(self, parent, rows=10, columns=2):
+        Frame.__init__(self,parent)
+               
+<a name="0"></a><font color="#FF0000"><a href="match29-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_7.gif" alt="other" border="0" align="left"></a>
+
+        self._widgets = []
+        for row in range(rows):
+            current_row = []
+            for column in range(columns):
+                label = ttk.Label(self, text="%s/%s" % (row, column), 
+                                 borderwidth=0, width=22)
+                label.grid(row=row, column=column, sticky="nsew", padx=5, pady=5)
+                current_row.append(label)
+                self._widgets.append(current_row)      
+                for column in range(columns):
+                    self.grid_columnconfigure(column, weight=1)
+    def set(self, row, column, value):        
+        widget = self._widgets[row][column]
+        widget.configure(text=value)   
+</font>   
+
+
+             
+   
+ 
+class MainApplication(Frame):
+   
+   def __init__(self):
+         global root
+         root=Tk()   
+         root.geometry("400x450")
+         Frame.__init__(self,root)                        
+         self.filter=Filter(self)
+         self.recommendations=Recommendations(self)
+         self.gradeloader=GradesLoader(self)        
+         self.filter.grid()
+         self.recommendations.grid(row=1,column=1)
+         self.gradeloader.grid(row=2,column=6) 
+         root.mainloop() 
+   
+      
+def main():
+   
+   a=MainApplication()
+   
+   
+   print similarity_measure
+   
+     
+
+main()   
+</pre>
+
+</body>
+</html>

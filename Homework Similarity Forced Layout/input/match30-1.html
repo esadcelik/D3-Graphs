@@ -1,0 +1,71 @@
+﻿<html>
+<head>
+<title>project/project15/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project17/<p><pre>
+&gt;&gt;&gt;&gt; file: merve_taskiran_ozlem_tirsi.py
+__author__ = 'mervetaskiran'
+from Tkinter import *
+
+
+from tkFileDialog import askopenfilename
+
+root = Tk()
+def grades(parent=root):
+    name=askopenfilename()
+    print name
+
+Button(text='Load Past Student Grades', command=grades).pack(fill=X)
+
+def transcript(parent=root):
+    name=askopenfilename()
+    print name
+
+Button(text='Load Your Current Transcript', command=transcript).pack(fill=X)
+
+<a name="0"></a><font color="#FF0000"><a href="match30-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_26.gif" alt="other" border="0" align="left"></a>
+
+v = IntVar()
+
+Label(root, text="""Collaborative Filtering Type:""", justify = LEFT, padx = 20).pack()
+Radiobutton(root,
+            text="User-Based",
+            padx = 150,
+            variable=v,
+            value=1).pack(anchor=W)
+Radiobutton(root,
+            text="Item-Based",
+            padx = 150,
+            variable=v,
+            value=2).pack(anchor=W)
+</font>
+import ttk
+
+class Application():
+
+    def __init__(self, parent):
+        self.parent = parent
+<a name="1"></a><font color="#00FF00"><a href="match30-0.html#1" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_1_12.gif" alt="other" border="0" align="left"></a>
+
+        self.combo()
+
+    def combo(self):
+        self.box_value = StringVar()
+        self.box = ttk.Combobox(self.parent, textvariable=self.box_value,
+</font>                                state='readonly')
+<a name="2"></a><font color="#0000FF"><a href="match30-0.html#2" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_2_12.gif" alt="other" border="0" align="left"></a>
+
+        self.box['values'] = ('Pearson', 'Euclidean', 'Jaccard')
+        self.box.current(0)
+        self.box.grid(column=0, row=0)
+
+if __name__ == '__main__':
+    root=Tk()
+</font>    app = Application(root)
+
+root.mainloop()</pre>
+
+</body>
+</html>

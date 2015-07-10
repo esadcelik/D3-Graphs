@@ -1,0 +1,732 @@
+{
+    "Data": [
+        {
+            "Student_A": "1",
+            "Student_B": "23",
+            "A_B_Similarity": 99.0,
+            "B_A_Similarity": 41.0,
+            "NormalizedMetric": 70.0,
+            "File": "match0.html"
+        },
+        {
+            "Student_A": "26",
+            "Student_B": "28",
+            "A_B_Similarity": 59.0,
+            "B_A_Similarity": 35.0,
+            "NormalizedMetric": 47.0,
+            "File": "match1.html"
+        },
+        {
+            "Student_A": "28",
+            "Student_B": "38",
+            "A_B_Similarity": 33.0,
+            "B_A_Similarity": 75.0,
+            "NormalizedMetric": 54.0,
+            "File": "match2.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "21",
+            "A_B_Similarity": 42.0,
+            "B_A_Similarity": 39.0,
+            "NormalizedMetric": 40.5,
+            "File": "match3.html"
+        },
+        {
+            "Student_A": "26",
+            "Student_B": "9",
+            "A_B_Similarity": 45.0,
+            "B_A_Similarity": 62.0,
+            "NormalizedMetric": 53.5,
+            "File": "match4.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "39",
+            "A_B_Similarity": 34.0,
+            "B_A_Similarity": 38.0,
+            "NormalizedMetric": 36.0,
+            "File": "match5.html"
+        },
+        {
+            "Student_A": "23",
+            "Student_B": "37",
+            "A_B_Similarity": 21.0,
+            "B_A_Similarity": 66.0,
+            "NormalizedMetric": 43.5,
+            "File": "match6.html"
+        },
+        {
+            "Student_A": "1",
+            "Student_B": "37",
+            "A_B_Similarity": 51.0,
+            "B_A_Similarity": 66.0,
+            "NormalizedMetric": 58.5,
+            "File": "match7.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "40",
+            "A_B_Similarity": 31.0,
+            "B_A_Similarity": 38.0,
+            "NormalizedMetric": 34.5,
+            "File": "match8.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "39",
+            "A_B_Similarity": 28.0,
+            "B_A_Similarity": 34.0,
+            "NormalizedMetric": 31.0,
+            "File": "match9.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "40",
+            "A_B_Similarity": 30.0,
+            "B_A_Similarity": 34.0,
+            "NormalizedMetric": 32.0,
+            "File": "match10.html"
+        },
+        {
+            "Student_A": "28",
+            "Student_B": "9",
+            "A_B_Similarity": 22.0,
+            "B_A_Similarity": 51.0,
+            "NormalizedMetric": 36.5,
+            "File": "match11.html"
+        },
+        {
+            "Student_A": "28",
+            "Student_B": "40",
+            "A_B_Similarity": 18.0,
+            "B_A_Similarity": 28.0,
+            "NormalizedMetric": 23.0,
+            "File": "match12.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "28",
+            "A_B_Similarity": 21.0,
+            "B_A_Similarity": 17.0,
+            "NormalizedMetric": 19.0,
+            "File": "match13.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "23",
+            "A_B_Similarity": 22.0,
+            "B_A_Similarity": 13.0,
+            "NormalizedMetric": 17.5,
+            "File": "match14.html"
+        },
+        {
+            "Student_A": "23",
+            "Student_B": "40",
+            "A_B_Similarity": 12.0,
+            "B_A_Similarity": 23.0,
+            "NormalizedMetric": 17.5,
+            "File": "match15.html"
+        },
+        {
+            "Student_A": "23",
+            "Student_B": "28",
+            "A_B_Similarity": 12.0,
+            "B_A_Similarity": 15.0,
+            "NormalizedMetric": 13.5,
+            "File": "match16.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "28",
+            "A_B_Similarity": 20.0,
+            "B_A_Similarity": 15.0,
+            "NormalizedMetric": 17.5,
+            "File": "match17.html"
+        },
+        {
+            "Student_A": "26",
+            "Student_B": "38",
+            "A_B_Similarity": 25.0,
+            "B_A_Similarity": 34.0,
+            "NormalizedMetric": 29.5,
+            "File": "match18.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "23",
+            "A_B_Similarity": 17.0,
+            "B_A_Similarity": 11.0,
+            "NormalizedMetric": 14.0,
+            "File": "match19.html"
+        },
+        {
+            "Student_A": "38",
+            "Student_B": "40",
+            "A_B_Similarity": 26.0,
+            "B_A_Similarity": 17.0,
+            "NormalizedMetric": 21.5,
+            "File": "match20.html"
+        },
+        {
+            "Student_A": "23",
+            "Student_B": "38",
+            "A_B_Similarity": 9.0,
+            "B_A_Similarity": 26.0,
+            "NormalizedMetric": 17.5,
+            "File": "match21.html"
+        },
+        {
+            "Student_A": "28",
+            "Student_B": "39",
+            "A_B_Similarity": 11.0,
+            "B_A_Similarity": 16.0,
+            "NormalizedMetric": 13.5,
+            "File": "match22.html"
+        },
+        {
+            "Student_A": "39",
+            "Student_B": "40",
+            "A_B_Similarity": 16.0,
+            "B_A_Similarity": 16.0,
+            "NormalizedMetric": 16.0,
+            "File": "match23.html"
+        },
+        {
+            "Student_A": "38",
+            "Student_B": "39",
+            "A_B_Similarity": 23.0,
+            "B_A_Similarity": 15.0,
+            "NormalizedMetric": 19.0,
+            "File": "match24.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "38",
+            "A_B_Similarity": 12.0,
+            "B_A_Similarity": 23.0,
+            "NormalizedMetric": 17.5,
+            "File": "match25.html"
+        },
+        {
+            "Student_A": "38",
+            "Student_B": "9",
+            "A_B_Similarity": 23.0,
+            "B_A_Similarity": 23.0,
+            "NormalizedMetric": 23.0,
+            "File": "match26.html"
+        },
+        {
+            "Student_A": "23",
+            "Student_B": "39",
+            "A_B_Similarity": 7.0,
+            "B_A_Similarity": 14.0,
+            "NormalizedMetric": 10.5,
+            "File": "match27.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "38",
+            "A_B_Similarity": 12.0,
+            "B_A_Similarity": 21.0,
+            "NormalizedMetric": 16.5,
+            "File": "match28.html"
+        },
+        {
+            "Student_A": "25",
+            "Student_B": "41",
+            "A_B_Similarity": 13.0,
+            "B_A_Similarity": 10.0,
+            "NormalizedMetric": 11.5,
+            "File": "match29.html"
+        },
+        {
+            "Student_A": "15",
+            "Student_B": "17",
+            "A_B_Similarity": 35.0,
+            "B_A_Similarity": 52.0,
+            "NormalizedMetric": 43.5,
+            "File": "match30.html"
+        },
+        {
+            "Student_A": "25",
+            "Student_B": "4",
+            "A_B_Similarity": 9.0,
+            "B_A_Similarity": 9.0,
+            "NormalizedMetric": 9.0,
+            "File": "match31.html"
+        },
+        {
+            "Student_A": "14",
+            "Student_B": "20",
+            "A_B_Similarity": 57.0,
+            "B_A_Similarity": 69.0,
+            "NormalizedMetric": 63.0,
+            "File": "match32.html"
+        },
+        {
+            "Student_A": "13",
+            "Student_B": "42",
+            "A_B_Similarity": 9.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 7.0,
+            "File": "match33.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "26",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 4.0,
+            "File": "match34.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "32",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 4.0,
+            "NormalizedMetric": 4.5,
+            "File": "match35.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "38",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 6.0,
+            "NormalizedMetric": 5.0,
+            "File": "match36.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "28",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 3.0,
+            "File": "match37.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "26",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 4.0,
+            "NormalizedMetric": 4.0,
+            "File": "match38.html"
+        },
+        {
+            "Student_A": "32",
+            "Student_B": "38",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 4.0,
+            "File": "match39.html"
+        },
+        {
+            "Student_A": "28",
+            "Student_B": "32",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 2.5,
+            "File": "match40.html"
+        },
+        {
+            "Student_A": "26",
+            "Student_B": "32",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 3.5,
+            "File": "match41.html"
+        },
+        {
+            "Student_A": "23",
+            "Student_B": "6",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 2.0,
+            "File": "match42.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "25",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 4.0,
+            "File": "match43.html"
+        },
+        {
+            "Student_A": "11",
+            "Student_B": "36",
+            "A_B_Similarity": 11.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 7.0,
+            "File": "match44.html"
+        },
+        {
+            "Student_A": "2",
+            "Student_B": "27",
+            "A_B_Similarity": 6.0,
+            "B_A_Similarity": 12.0,
+            "NormalizedMetric": 9.0,
+            "File": "match45.html"
+        },
+        {
+            "Student_A": "12",
+            "Student_B": "24",
+            "A_B_Similarity": 7.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 5.0,
+            "File": "match46.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "42",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 3.0,
+            "File": "match47.html"
+        },
+        {
+            "Student_A": "10",
+            "Student_B": "27",
+            "A_B_Similarity": 9.0,
+            "B_A_Similarity": 9.0,
+            "NormalizedMetric": 9.0,
+            "File": "match48.html"
+        },
+        {
+            "Student_A": "10",
+            "Student_B": "2",
+            "A_B_Similarity": 9.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 7.0,
+            "File": "match49.html"
+        },
+        {
+            "Student_A": "13",
+            "Student_B": "38",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 4.0,
+            "NormalizedMetric": 4.5,
+            "File": "match50.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "9",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 4.0,
+            "NormalizedMetric": 3.0,
+            "File": "match51.html"
+        },
+        {
+            "Student_A": "42",
+            "Student_B": "9",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 2.5,
+            "File": "match52.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "9",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 2.5,
+            "File": "match53.html"
+        },
+        {
+            "Student_A": "13",
+            "Student_B": "33",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 4.5,
+            "File": "match54.html"
+        },
+        {
+            "Student_A": "33",
+            "Student_B": "9",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 4.0,
+            "File": "match55.html"
+        },
+        {
+            "Student_A": "16",
+            "Student_B": "25",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 3.0,
+            "File": "match56.html"
+        },
+        {
+            "Student_A": "13",
+            "Student_B": "24",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 3.0,
+            "File": "match57.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "8",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 5.0,
+            "NormalizedMetric": 3.0,
+            "File": "match58.html"
+        },
+        {
+            "Student_A": "16",
+            "Student_B": "38",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 3.0,
+            "File": "match59.html"
+        },
+        {
+            "Student_A": "16",
+            "Student_B": "28",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 2.0,
+            "File": "match60.html"
+        },
+        {
+            "Student_A": "4",
+            "Student_B": "41",
+            "A_B_Similarity": 3.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 2.5,
+            "File": "match61.html"
+        },
+        {
+            "Student_A": "13",
+            "Student_B": "9",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 3.5,
+            "File": "match62.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "8",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 4.0,
+            "NormalizedMetric": 2.5,
+            "File": "match63.html"
+        },
+        {
+            "Student_A": "17",
+            "Student_B": "32",
+            "A_B_Similarity": 13.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 7.5,
+            "File": "match64.html"
+        },
+        {
+            "Student_A": "12",
+            "Student_B": "42",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 3.5,
+            "File": "match65.html"
+        },
+        {
+            "Student_A": "12",
+            "Student_B": "13",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 3.0,
+            "NormalizedMetric": 4.0,
+            "File": "match66.html"
+        },
+        {
+            "Student_A": "40",
+            "Student_B": "6",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match67.html"
+        },
+        {
+            "Student_A": "39",
+            "Student_B": "6",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match68.html"
+        },
+        {
+            "Student_A": "38",
+            "Student_B": "6",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.5,
+            "File": "match69.html"
+        },
+        {
+            "Student_A": "36",
+            "Student_B": "7",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match70.html"
+        },
+        {
+            "Student_A": "33",
+            "Student_B": "42",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 2.5,
+            "File": "match71.html"
+        },
+        {
+            "Student_A": "32",
+            "Student_B": "35",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match72.html"
+        },
+        {
+            "Student_A": "3",
+            "Student_B": "35",
+            "A_B_Similarity": 4.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 2.5,
+            "File": "match73.html"
+        },
+        {
+            "Student_A": "28",
+            "Student_B": "6",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match74.html"
+        },
+        {
+            "Student_A": "26",
+            "Student_B": "40",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.5,
+            "File": "match75.html"
+        },
+        {
+            "Student_A": "25",
+            "Student_B": "40",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.5,
+            "File": "match76.html"
+        },
+        {
+            "Student_A": "25",
+            "Student_B": "39",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.5,
+            "File": "match77.html"
+        },
+        {
+            "Student_A": "25",
+            "Student_B": "38",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 2.0,
+            "File": "match78.html"
+        },
+        {
+            "Student_A": "25",
+            "Student_B": "28",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.5,
+            "File": "match79.html"
+        },
+        {
+            "Student_A": "24",
+            "Student_B": "33",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 4.0,
+            "NormalizedMetric": 3.0,
+            "File": "match80.html"
+        },
+        {
+            "Student_A": "22",
+            "Student_B": "39",
+            "A_B_Similarity": 2.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.5,
+            "File": "match81.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "6",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match82.html"
+        },
+        {
+            "Student_A": "21",
+            "Student_B": "25",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 1.5,
+            "File": "match83.html"
+        },
+        {
+            "Student_A": "20",
+            "Student_B": "23",
+            "A_B_Similarity": 19.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 10.0,
+            "File": "match84.html"
+        },
+        {
+            "Student_A": "19",
+            "Student_B": "36",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match85.html"
+        },
+        {
+            "Student_A": "19",
+            "Student_B": "24",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 1.5,
+            "File": "match86.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "6",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 1.0,
+            "File": "match87.html"
+        },
+        {
+            "Student_A": "18",
+            "Student_B": "41",
+            "A_B_Similarity": 1.0,
+            "B_A_Similarity": 2.0,
+            "NormalizedMetric": 1.5,
+            "File": "match88.html"
+        },
+        {
+            "Student_A": "11",
+            "Student_B": "7",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 1.0,
+            "NormalizedMetric": 3.0,
+            "File": "match89.html"
+        },
+        {
+            "Student_A": "10",
+            "Student_B": "30",
+            "A_B_Similarity": 5.0,
+            "B_A_Similarity": 6.0,
+            "NormalizedMetric": 5.5,
+            "File": "match90.html"
+        }
+    ]
+}

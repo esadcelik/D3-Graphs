@@ -1,0 +1,388 @@
+﻿<html>
+<head>
+<title>project/project21/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project6/<p><pre>
+&gt;&gt;&gt;&gt; file: Yahya_Almotawaq_Kamal_Abuhmaid.py
+
+import xlrd
+
+let2num = {'A+':4.1, 'A':4, 'A-':3.7, 'B+':3.3, 'B':3, 'B-':2.7,'C+':2.3,
+           'C':2, 'C-':1.7, 'D+':1.3, 'D':1, 'D-':0.5, 'F':0}
+
+class FileHandler(object):
+    def __init__(self):
+        self.data = {}
+
+    def loadFile(self, path):
+        wb = xlrd.open_workbook(path)
+        sheet = wb.sheet_by_index(0)
+        numRows = sheet.nrows
+        currentRow = 1
+        while currentRow &lt; numRows:
+            code = sheet.cell_value(currentRow,0).encode("utf8")
+            title = sheet.cell_value(currentRow,1).encode("utf8")
+            grade = let2num[sheet.cell_value(currentRow,2).encode("utf8")]
+            self.data[code + ' ' + title] = grade
+            currentRow += 1
+    def returnData(self):
+        return self.data
+    def clearData(self):
+        self.data = {}
+
+
+
+from Tkinter import *
+import FileHandler
+import tkFileDialog
+import tkMessageBox
+from recommendations import *
+
+# Global Variables
+
+
+class app(object):
+<a name="0"></a><font color="#FF0000"><a href="match82-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_1.gif" alt="other" border="0" align="left"></a>
+
+    def __init__(self, root):
+        self.root = root
+        self.choiceVar = StringVar()
+        self.filterTypeVar = IntVar()
+        self.areFilesLoaded = False
+        self.isTranscriptLoaded = False
+</font>        self.fh = from Tkinter import *
+
+import FileHandler
+import tkFileDialog
+import tkMessageBox
+from recommendations import *
+
+# Global Variables
+
+
+
+
+class app(object):
+    def __init__(self, root):
+        self.root = root
+        self.choiceVar = StringVar()
+        self.filterTypeVar = IntVar()
+        self.areFilesLoaded = False
+        self.isTranscriptLoaded = False
+        self.fh = FileHandler.FileHandler()
+        self.features = {}
+
+        self.root.title("Virtual Advisor v1.0")
+        self.root.geometry("600x455+300+300")
+        self.root.resizable(width=FALSE, height=FALSE)
+        self.backgroundImage = PhotoImage(file='Graphics/background.gif')
+        self.backgroundLabel = Label(self.root, image=self.backgroundImage)
+        self.backgroundLabel.place(x=0, y=0, relwidth=1, relheight=1)
+
+
+        self.loadButton1Image = PhotoImage(file='Graphics/loadButton1Image.gif')
+        self.loadButton1 = Button(self.root, image=self.loadButton1Image, bd=0, command=self.loadButton1_callback)
+        self.loadButton1.place(x=20, y=80)
+
+        self.loadButton2Image = PhotoImage(file='Graphics/loadButton2Image.gif')
+        self.loadButton2 = Button(self.root, image=self.loadButton2Image, bd=0, command=self.loadButton2_callback)
+        self.loadButton2.place(x=310, y=80)
+
+        self.generateButtonImage = PhotoImage(file='Graphics/generateButtonImage.gif')
+        self.generateButton = Button(self.root, image=self.generateButtonImage, bd=0, command=self.generateButton_callback)
+        self.generateButton.place(x=20, y=200)
+
+        self.radio1 = Radiobutton(self.root, text="User-based", variable=self.filterTypeVar, value=0)
+        self.radio1.place(x=180, y=135)
+        self.radio2 = Radiobutton(self.root, text="Item-based", variable=self.filterTypeVar, value=1)
+        self.radio2.place(x=180, y=160)
+
+        self.choiceVar.set("Perason")
+        self.choiceMenu = OptionMenu(self.root, self.choiceVar, "Perason", "Euclidean", "Jaccard")
+        self.choiceMenu.place(x=450, y=145)
+
+        self.resultsLabelImage = PhotoImage(file='Graphics/results.gif')
+
+
+        # functions
+    def loadButton1_callback(self):
+        filename = tkFileDialog.askopenfilenames(title="Select Files", filetypes=[("Excel files","*.xlsx")])
+        filenames = filename.split()
+        for i in range(len(filenames)):
+            self.fh.loadFile(filenames[i])
+            self.features["Student"+str(i+1)] = self.fh.returnData()
+            self.fh.clearData()
+        self.areFilesLoaded = True
+
+    def loadButton2_callback(self):
+        if not self.areFilesLoaded:
+            tkMessageBox.showwarning("Error!", 'You must upload the grades from \nprevious years first!')
+            return
+        filename = tkFileDialog.askopenfilename(title="Select a File", filetypes=[("Excel files","*.xlsx")])
+        self.fh.loadFile(filename)
+        self.features["User"] = self.fh.returnData()
+        self.fh.clearData()
+        self.isTranscriptLoaded = True
+
+    def generateButton_callback(self):
+        if not self.isTranscriptLoaded:
+            tkMessageBox.showwarning("Error!", 'You must upload your transcript \nbefore generating recommendation!')
+            return
+        if self.filterTypeVar.get() == 0:
+            if self.choiceMenu.cget("text") == "Perason":
+                similarity = sim_pearson
+            elif self.choiceMenu.cget("text") == "Euclidean":
+                similarity = sim_distance
+            else:
+                similarity = sim_jaccard2
+
+            recom = getRecommendations(self.features, "User", similarity)
+            self.viewResults(recom)
+        else:
+            itemMatch = calculateSimilarItems(self.features)
+            recom = getRecommendedItems(self.features, itemMatch, "User")
+            self.viewResults(recom)
+
+    def viewResults(self, result):
+        resultsLabel = Label(self.root, image=self.resultsLabelImage)
+        resultsLabel.place(x=20, y=250)
+
+        # result 1
+        resultCourseName1 = result[0][1]
+        resultCourseLabel1 = Label(self.root, text=resultCourseName1)
+        resultCourseLabel1.place(x=25, y=303)
+
+        resultGrade1 = str(self.calculateLetter(result[0][0]))+"  ("+str(round(result[0][0], 2))+")"
+        resultGradeLabel1 = Label(self.root, text=resultGrade1)
+        resultGradeLabel1.place(x=310, y=303)
+
+        # result 2
+        resultCourseName2 = result[1][1]
+        resultCourseLabel2 = Label(self.root,text=resultCourseName2)
+        resultCourseLabel2.place(x=25, y=330)
+
+        resultGrade2 = str(self.calculateLetter(result[1][0]))+"  ("+str(round(result[1][0], 2))+")"
+        resultGradeLabel2 = Label(self.root, text=resultGrade2)
+        resultGradeLabel2.place(x=310, y=330)
+
+        # result 3
+        resultCourseName3 = result[2][1]
+        resultCourseLabel3 = Label(self.root, text=resultCourseName3)
+        resultCourseLabel3.place(x=25, y=358)
+
+        resultGrade3 = str(self.calculateLetter(result[2][0]))+"  ("+str(round(result[2][0], 2))+")"
+        resultGradeLabel3 = Label(self.root, text=resultGrade3)
+        resultGradeLabel3.place(x=310, y=358)
+
+        # result 4
+        resultCourseName4 = result[3][1]
+        resultCourseLabel4 = Label(self.root, text=resultCourseName4)
+        resultCourseLabel4.place(x=25, y=387)
+
+        resultGrade4 = str(self.calculateLetter(result[3][0]))+"  ("+str(round(result[3][0], 2))+")"
+        resultGradeLabel4 = Label(self.root, text=resultGrade4)
+        resultGradeLabel4.place(x=310, y=387)
+
+        # result 4
+        resultCourseName5 = result[4][1]
+        resultCourseLabel5 = Label(self.root, text=resultCourseName5)
+        resultCourseLabel5.place(x=25, y=415)
+
+        resultGrade5 = str(self.calculateLetter(result[4][0]))+"  ("+str(round(result[4][0], 2))+")"
+        resultGradeLabel5 = Label(self.root, text=resultGrade5)
+        resultGradeLabel5.place(x=310, y=415)
+
+    def calculateLetter(self, grade):
+        if grade &gt; 4:
+            return "A+"
+        elif grade &gt; 3.7:
+            return "A"
+        elif grade &gt; 3.3:
+            return "A-"
+        elif grade &gt; 3:
+            return "B+"
+        elif grade &gt; 2.7:
+            return "B"
+        elif grade &gt; 2.3:
+            return "B-"
+        elif grade &gt; 2:
+            return "C+"
+        elif grade &gt; 1.7:
+            return "C"
+        elif grade &gt; 1.3:
+            return "C-"
+        elif grade &gt; 1:
+            return "D+"
+        elif grade &gt; 0.7:
+            return "D"
+        elif grade &gt; 0.5:
+            return "D-"
+        else:
+            return "F"
+
+root = Tk()
+gui = app(root)
+gui.root.mainloop()
+
+
+
+FileHandler.FileHandler()
+        self.features = {}
+
+        self.root.title("Virtual Advisor v1.0")
+        self.root.geometry("600x455+300+300")
+        self.root.resizable(width=FALSE, height=FALSE)
+        self.backgroundImage = PhotoImage(file='Graphics/background.gif')
+        self.backgroundLabel = Label(self.root, image=self.backgroundImage)
+        self.backgroundLabel.place(x=0, y=0, relwidth=1, relheight=1)
+
+
+        self.loadButton1Image = PhotoImage(file='Graphics/loadButton1Image.gif')
+        self.loadButton1 = Button(self.root, image=self.loadButton1Image, bd=0, command=self.loadButton1_callback)
+        self.loadButton1.place(x=20, y=80)
+
+        self.loadButton2Image = PhotoImage(file='Graphics/loadButton2Image.gif')
+        self.loadButton2 = Button(self.root, image=self.loadButton2Image, bd=0, command=self.loadButton2_callback)
+        self.loadButton2.place(x=310, y=80)
+
+        self.generateButtonImage = PhotoImage(file='Graphics/generateButtonImage.gif')
+        self.generateButton = Button(self.root, image=self.generateButtonImage, bd=0, command=self.generateButton_callback)
+        self.generateButton.place(x=20, y=200)
+
+        self.radio1 = Radiobutton(self.root, text="User-based", variable=self.filterTypeVar, value=0)
+        self.radio1.place(x=180, y=135)
+        self.radio2 = Radiobutton(self.root, text="Item-based", variable=self.filterTypeVar, value=1)
+        self.radio2.place(x=180, y=160)
+
+        self.choiceVar.set("Perason")
+        self.choiceMenu = OptionMenu(self.root, self.choiceVar, "Perason", "Euclidean", "Jaccard")
+        self.choiceMenu.place(x=450, y=145)
+
+        self.resultsLabelImage = PhotoImage(file='Graphics/results.gif')
+
+
+        # functions
+    def loadButton1_callback(self):
+        filename = tkFileDialog.askopenfilenames(title="Select Files", filetypes=[("Excel files","*.xlsx")])
+        filenames = filename.split()
+        for i in range(len(filenames)):
+            self.fh.loadFile(filenames[i])
+            self.features["Student"+str(i+1)] = self.fh.returnData()
+            self.fh.clearData()
+        self.areFilesLoaded = True
+
+    def loadButton2_callback(self):
+        if not self.areFilesLoaded:
+            tkMessageBox.showwarning("Error!", 'You must upload the grades from \nprevious years first!')
+            return
+        filename = tkFileDialog.askopenfilename(title="Select a File", filetypes=[("Excel files","*.xlsx")])
+        self.fh.loadFile(filename)
+        self.features["User"] = self.fh.returnData()
+        self.fh.clearData()
+        self.isTranscriptLoaded = True
+
+    def generateButton_callback(self):
+        if not self.isTranscriptLoaded:
+            tkMessageBox.showwarning("Error!", 'You must upload your transcript \nbefore generating recommendation!')
+            return
+        if self.filterTypeVar.get() == 0:
+            if self.choiceMenu.cget("text") == "Perason":
+                similarity = sim_pearson
+            elif self.choiceMenu.cget("text") == "Euclidean":
+                similarity = sim_distance
+            else:
+                similarity = sim_jaccard2
+
+            recom = getRecommendations(self.features, "User", similarity)
+            self.viewResults(recom)
+        else:
+            itemMatch = calculateSimilarItems(self.features)
+            recom = getRecommendedItems(self.features, itemMatch, "User")
+            self.viewResults(recom)
+
+    def viewResults(self, result):
+        resultsLabel = Label(self.root, image=self.resultsLabelImage)
+        resultsLabel.place(x=20, y=250)
+
+        # result 1
+        resultCourseName1 = result[0][1]
+        resultCourseLabel1 = Label(self.root, text=resultCourseName1)
+        resultCourseLabel1.place(x=25, y=303)
+
+        resultGrade1 = str(self.calculateLetter(result[0][0]))+"  ("+str(round(result[0][0], 2))+")"
+        resultGradeLabel1 = Label(self.root, text=resultGrade1)
+        resultGradeLabel1.place(x=310, y=303)
+
+        # result 2
+        resultCourseName2 = result[1][1]
+        resultCourseLabel2 = Label(self.root,text=resultCourseName2)
+        resultCourseLabel2.place(x=25, y=330)
+
+        resultGrade2 = str(self.calculateLetter(result[1][0]))+"  ("+str(round(result[1][0], 2))+")"
+        resultGradeLabel2 = Label(self.root, text=resultGrade2)
+        resultGradeLabel2.place(x=310, y=330)
+
+        # result 3
+        resultCourseName3 = result[2][1]
+        resultCourseLabel3 = Label(self.root, text=resultCourseName3)
+        resultCourseLabel3.place(x=25, y=358)
+
+        resultGrade3 = str(self.calculateLetter(result[2][0]))+"  ("+str(round(result[2][0], 2))+")"
+        resultGradeLabel3 = Label(self.root, text=resultGrade3)
+        resultGradeLabel3.place(x=310, y=358)
+
+        # result 4
+        resultCourseName4 = result[3][1]
+        resultCourseLabel4 = Label(self.root, text=resultCourseName4)
+        resultCourseLabel4.place(x=25, y=387)
+
+        resultGrade4 = str(self.calculateLetter(result[3][0]))+"  ("+str(round(result[3][0], 2))+")"
+        resultGradeLabel4 = Label(self.root, text=resultGrade4)
+        resultGradeLabel4.place(x=310, y=387)
+
+        # result 4
+        resultCourseName5 = result[4][1]
+        resultCourseLabel5 = Label(self.root, text=resultCourseName5)
+        resultCourseLabel5.place(x=25, y=415)
+
+        resultGrade5 = str(self.calculateLetter(result[4][0]))+"  ("+str(round(result[4][0], 2))+")"
+        resultGradeLabel5 = Label(self.root, text=resultGrade5)
+        resultGradeLabel5.place(x=310, y=415)
+
+    def calculateLetter(self, grade):
+        if grade &gt; 4:
+            return "A+"
+        elif grade &gt; 3.7:
+            return "A"
+        elif grade &gt; 3.3:
+            return "A-"
+        elif grade &gt; 3:
+            return "B+"
+        elif grade &gt; 2.7:
+            return "B"
+        elif grade &gt; 2.3:
+            return "B-"
+        elif grade &gt; 2:
+            return "C+"
+        elif grade &gt; 1.7:
+            return "C"
+        elif grade &gt; 1.3:
+            return "C-"
+        elif grade &gt; 1:
+            return "D+"
+        elif grade &gt; 0.7:
+            return "D"
+        elif grade &gt; 0.5:
+            return "D-"
+        else:
+            return "F"
+
+root = Tk()
+gui = app(root)
+gui.root.mainloop()
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+* {
+	margin: 0;
+	padding: 0;
+
+	font: bold 14px Arial, sans-serif;
+}
+#wrapper {
+    width: 70%;
+    margin: 30px auto;
+}
+.line1 {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+  }
+  .line2 {
+  fill: none;
+  stroke: red;
+  stroke-width: 1.5px;
+  }
+  .line3 {
+  fill: none;
+  stroke: blue;
+  stroke-width: 1.5px;
+  }
+  .line4 {
+  fill: none;
+  stroke: green;
+  stroke-width: 1.5px;
+  }
+.graph {
+	
+	display: inline-block;
+	vertical-align: top;
+	
+	overflow:hidden;
+	width: 400px;
+	height: 400px;
+	margin: 0px 0px 20px 20px;
+}
+
+#update {
+    background-color: grey;
+    color: white;
+    display: block;
+    height: 20px;
+    line-height: 20px;
+    text-decoration: none;
+    width: 50px;
+    text-align: center;
+}
+.g {width: 50px;}
+
+.h {width: 15px;}
+
+.options {
+	
+	display: inline-block;
+	vertical-align: top;
+	
+	overflow:hidden;
+	width: 200px;
+	height: 400px;
+	margin: 0px 0px 20px 20px;
+	
+}

@@ -1,0 +1,99 @@
+* {
+	margin: 0;
+	padding: 0;
+
+	font: bold 14px Arial, sans-serif;
+}
+#wrapper {
+    width: 50%;
+    margin: 30px auto;
+}
+.slc {
+	margin-left: auto;
+    margin-right: auto;
+    width: 20%;
+   
+}
+.ppp1 {
+	margin-left: auto;
+    margin-right: auto;
+    float: left;
+    width:300px;
+	height:150px;
+}
+.ppp2 {
+	margin-left: auto;
+    margin-right: auto;
+    float: right;
+    width:300px;
+	height:150px;
+   
+}
+.line {
+  fill: none;
+  stroke: #99FF33;
+  stroke-width: 2px;
+  }
+.graphs {}
+
+.graph {
+  width:600px;
+  height:600px;
+  float:left;
+  
+}
+#t {
+width:300px;
+  height:300px;
+  float:left;
+
+}
+path.area {
+  fill: steelblue;
+  
+}
+.rec {
+  fill: #006666;
+  
+}
+#tooltip {
+        		position: absolute;
+        		width: 300px;
+        		height: auto;
+        		padding: 10px;
+        		background-color: white;
+        		border-radius: 10px;
+        		box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        		pointer-events: none;
+		}
+#tooltip2 {
+        		position: absolute;
+        		width: 300px;
+        		height: auto;
+        		padding: 10px;
+        		background-color: white;
+        		border-radius: 10px;
+        		box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        		pointer-events: none;
+		}
+
+#tooltip.hidden {
+	      		display: none;
+		}
+
+#tooltip p {
+        		margin: 0;
+		        font-family: sans-serif;
+        		font-size: 16px;
+        		line-height: 20px;
+		}
+#tooltip2.hidden {
+	      		display: none;
+		}
+
+#tooltip2 p {
+        		margin: 0;
+		        font-family: sans-serif;
+        		font-size: 16px;
+        		line-height: 20px;
+		}

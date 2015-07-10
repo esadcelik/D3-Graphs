@@ -1,0 +1,172 @@
+﻿<html>
+<head>
+<title>project/project11/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project7/<p><pre>
+&gt;&gt;&gt;&gt; file: sevgi_bilgic.py
+from Tkinter import *
+import recommendations
+import Tkconstants
+import ttk
+import tkFileDialog
+from xlrd import open_workbook,cellname
+import tkFont
+root= Tk()
+pref=dict()
+def getfileName():
+    global fileName
+    fileName= tkFileDialog.askopenfilename()
+    pref.setdefault(fileName,{})
+    workbook=open_workbook(fileName)
+    sheet=workbook.sheet_by_index(0)
+    for row_index in range(1,sheet.nrows):
+        pref[fileName][sheet.cell(row_index,colx=0).value]=sheet.cell(row_index,colx=2).value
+        if sheet.cell(row_index,colx=2).value == 'A+':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 4.1
+        if sheet.cell(row_index,colx=2).value == 'A':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 4.0
+        if sheet.cell(row_index,colx=2).value == 'A-':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 3.7
+        if sheet.cell(row_index,colx=2).value == 'B+':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 3.3
+        if sheet.cell(row_index,colx=2).value == 'B':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 3.0
+        if sheet.cell(row_index,colx=2).value == 'B-':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 2.7
+        if sheet.cell(row_index,colx=2).value == 'C+':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 2.3
+        if sheet.cell(row_index,colx=2).value == 'C':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 2.0
+        if sheet.cell(row_index,colx=2).value == 'C-':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 1.7
+        if sheet.cell(row_index,colx=2).value == 'D+':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 1.3
+        if sheet.cell(row_index,colx=2).value == 'D':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 1.0
+        if sheet.cell(row_index,colx=2).value == 'D-':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 0.5
+        if sheet.cell(row_index,colx=2).value == 'F':
+            pref[fileName][sheet.cell(row_index,colx=0).value]= 0.0
+    return pref
+def getFileNames():
+    fileNames= tkFileDialog.askopenfilenames()
+    for filename in fileNames:
+        pref.setdefault(filename,{})
+        workbook=open_workbook(filename)
+        sheet=workbook.sheet_by_index(0)
+        for row_index in range(1,sheet.nrows):
+            pref[filename][sheet.cell(row_index,colx=0).value]=sheet.cell(row_index,colx=2).value
+            if sheet.cell(row_index,colx=2).value == 'A+':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 4.1
+            if sheet.cell(row_index,colx=2).value == 'A':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 4.0
+            if sheet.cell(row_index,colx=2).value == 'A-':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 3.7
+            if sheet.cell(row_index,colx=2).value == 'B+':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 3.3
+            if sheet.cell(row_index,colx=2).value == 'B':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 3.0
+            if sheet.cell(row_index,colx=2).value == 'B-':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 2.7
+            if sheet.cell(row_index,colx=2).value == 'C+':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 2.3
+            if sheet.cell(row_index,colx=2).value == 'C':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 2.0
+            if sheet.cell(row_index,colx=2).value == 'C-':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 1.7
+            if sheet.cell(row_index,colx=2).value == 'D+':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 1.3
+            if sheet.cell(row_index,colx=2).value == 'D':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 1.0
+            if sheet.cell(row_index,colx=2).value == 'D-':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 0.5
+            if sheet.cell(row_index,colx=2).value == 'F':
+                pref[filename][sheet.cell(row_index,colx=0).value]= 0.0
+    return pref
+
+def comboxselect(simname):
+    global list1
+    list1=[]
+    if combobox1.get()== 'Euclidean' and v.get()==1:
+        sim1= recommendations.getRecommendations(prefs=pref,person=fileName,similarity=recommendations.sim_distance)
+        for key,val in sim1[0:6]:
+            list1.append((val,'%.2f' %key))
+    if combobox1.get()== 'Pearson' and v.get()==1:
+        sim1= recommendations.getRecommendations(prefs=pref,person=fileName,similarity=recommendations.sim_pearson)
+        for key,val in sim1[0:6]:
+            list1.append((val,'%.2f' %key))
+        return list1
+    if combobox1.get() == 'Jaccard' and v.get()==1:
+        sim1= recommendations.getRecommendations(prefs=pref,person=fileName, similarity=recommendations.sim_jaccard2)
+        for key,val in sim1[0:6]:
+            list1.append((val,'%.2f' %key))
+        return list1
+    if combobox1.get()== 'Euclidean' and v.get()==2:
+        sim2=recommendations.calculateSimilarItems(prefs=pref,n=6)
+        sim3=recommendations.getRecommendedItems(prefs=pref,itemMatch=sim2,user=fileName)
+        for key,val in sim3[0:6]:
+            list1.append((val,'%.2f' % key))
+        return list1
+    if combobox1.get()== 'Pearson' and v.get()==2:
+        sim2=recommendations.calculateSimilarItems(prefs=pref,n=6)
+        sim3=recommendations.getRecommendedItems(prefs=pref,itemMatch=sim2,user=fileName)
+        for key,val in sim3[0:6]:
+            list1.append((val,'%.2f' %key))
+        return list1
+    if combobox1.get()== 'Jaccard' and v.get()==2:
+        sim2=recommendations.calculateSimilarItems(prefs=pref,n=6)
+        sim3=recommendations.getRecommendedItems(prefs=pref,itemMatch=sim2,user=fileName)
+        for key,val in sim3[0:6]:
+            list1.append((val,'%.2f' %key))
+        return list1
+def treefunc():
+        tree=ttk.Treeview(root, columns=['one', 'two'])
+        tree.heading('one',text='Recommended Courses')
+        tree.heading('two',text='Predicted Grade')
+        tree['show']='headings'
+        tree.insert('',0, values=list1[0],tags=('evenrow',))
+        tree.insert('',1, values=list1[1],tags = ('oddrow',))
+        tree.insert('',2,values=list1[2],tags=('evenrow',))
+        tree.insert('',3,values=list1[3],tags = ('oddrow',))
+        tree.insert('',4,values=list1[4],tags=('evenrow',))
+        tree.insert('',5, values=list1[5],tags = ('oddrow',))
+        tree.tag_configure('oddrow',background= "cyan")
+        tree.tag_configure('evenrow', background='pink')
+        tree.grid(row=11, column=0)
+
+frame1= Frame(root,bg='pink', width=3000, height=50)
+
+iconButton1 = Button(frame1,text="Load Past Student Grades",fg='red',height=2, width=25,font=("Purisa",12), command=getFileNames)
+iconButton2 = Button(frame1,text="Load Your Current Transkript",fg='red',height=2, width=25,font=("Purisa",12), command=getfileName)
+iconButton1.grid(row=3, column=2)
+iconButton2.grid(row=3, column=5)
+
+v = IntVar()
+<a name="0"></a><font color="#FF0000"><a href="match89-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_1.gif" alt="other" border="0" align="left"></a>
+
+Label1= Label(frame1,text="""Collaborative\nFiltering Type:""", fg='blue',height=3, width=20,font=("Purisa",10),justify = LEFT).grid(row=4, column=2)
+
+radiobutton1= Radiobutton(frame1,text='user-based',variable=v, value=1,height=1, width=20,font=("Purisa",10)).grid(row=4,column=3)
+</font>radiobutton2= Radiobutton(frame1,text='item-based', variable=v, value=2,height=1, width=20,font=("Purisa",10)).grid(row=5,column=3)
+
+Label2= Label(frame1, text='Similarity\nMeasure', fg='blue',height=3, width=20,font=("Purisa",10)).grid(row=4,column=4)
+Label3= Label(root, text='Virtual Advisor v1.0',fg='black',bg='cyan',height=4, width=20,font=("Purisa",14)). grid(row=0, column=0,padx=50,pady=50)
+
+c=StringVar
+combobox1= ttk.Combobox(frame1, textvariable=c, values=['Pearson','Euclidean','Jaccard'])
+combobox1.bind("&lt;&lt;ComboboxSelected&gt;&gt;",comboxselect )
+combobox1.grid(row=4, column=5)
+
+Button3= Button(root, text='See Recommended Courses',height=1, width=23,font=("Purisa",12), command=treefunc).grid(row=2, column= 0)
+
+frame1.grid(row=1, column= 0)
+
+root.minsize(500,700)
+root.configure(bg='purple')
+
+mainloop()</pre>
+
+</body>
+</html>

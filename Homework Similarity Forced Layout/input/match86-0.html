@@ -1,0 +1,262 @@
+﻿<html>
+<head>
+<title>project/project19/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project19/<p><pre>
+&gt;&gt;&gt;&gt; file: naveed_tahir.py
+__author__ = 'naveedtahir'
+
+#Virtual Advisor 1.0
+
+'''
+-&gt; The program produces correct output only if the past grades and transcripts each is loaded ONCE.
+Else, an error is generated and user is told to restart the program.
+-&gt; Checks if files for either past grades or transcript are missing and produces an appropriate message.
+-&gt; Checks if user has selected appropriate filtering and similarity types.
+'''
+
+
+
+#Importing all the required modules including the recommendations module
+from Tkinter import *
+import tkFileDialog
+import ttk
+import tkMessageBox
+from xlrd import open_workbook
+import recommendations
+
+#-----------------------------------------------------------------------------------------#
+
+#Global Variables
+file_address_tracker=[]            #keeps track of opened files
+past_and_test={}                   #nested dict that stores past and test data like critics dict in recommendations
+final_recommendations=[]           #stores (recommended courses, expected grade point) tuples
+input_mapping=dict([("A+", 4.1),("A", 4.0),("A-",3.7 ),("B+",3.3 ),("B",3.0 ),("B-",2.7 ),("C+",2.3),
+               ("C",2.0 ),("C-",1.7 ),("D+",1.3 ),("D",1.0 ),("D-",0.5 ),("F",0.0 )])
+if_sample_and_test_loaded=[]       #Enables to test if either sample or test data is missing
+
+#-----------------------------------------------------------------------------------------#
+
+#Functions used in the program
+
+def output_mapping(grade_point):
+    '''
+    Takes a float grade point (expected) and returns the corresponding letter grade.
+    :param grade_point:
+    :return:
+    '''
+    if grade_point &gt; 4.0:
+        return "A+"
+    elif (4.0 &gt;= grade_point) and (grade_point &gt; 3.7):
+        return "A"
+    elif (3.7 &gt;= grade_point) and (grade_point &gt; 3.3):
+        return "A-"
+    elif (3.3 &gt;= grade_point) and (grade_point &gt; 3.0):
+        return "B+"
+    elif (3.0 &gt;= grade_point) and (grade_point &gt; 2.7):
+        return "B"
+    elif (2.7 &gt;= grade_point) and (grade_point &gt; 2.3):
+        return "B-"
+    elif (2.3 &gt;= grade_point) and (grade_point &gt; 2.0):
+        return "C+"
+    elif (2.0 &gt;= grade_point) and (grade_point &gt; 1.7):
+        return "C"
+    elif (1.7 &gt;= grade_point) and (grade_point &gt; 1.3):
+        return "C-"
+    elif (1.3 &gt;= grade_point) and (grade_point &gt; 1.0):
+        return "D+"
+    elif (1.0 &gt;= grade_point) and (grade_point &gt; 0.5):
+        return "D"
+    elif (0.5 &gt;= grade_point) and (grade_point &gt; 0.1):
+        return "D-"
+    elif 0.1 &gt;= grade_point:
+        return "F"
+    else:
+        print "Problem in output mapping!"
+        return None
+
+def parse_grade_file(sample_grade_file):
+    '''
+    Uses the xlrd module to parse an xlsx file. I discarded the coruse codes because not all the sample files had the
+    course codes on them.
+    :param sample_grade_file:
+    :return:
+    '''
+    student={}
+    workbook = open_workbook(sample_grade_file)
+    for s in workbook.sheets():
+        for row in range(s.nrows):
+            if row==0:
+                continue
+            values=[]
+            for col in range(s.ncols):
+                values.append(s.cell(row,col).value)
+            if s.ncols==3:
+                course_code, course_name, letter_grade=values
+                student[(course_code.encode("ascii", "ignore"), course_name.encode("ascii", "ignore"))]=input_mapping[letter_grade.encode("ascii", "ignore")]
+            else:
+                tkMessageBox.showinfo(title='Stop!', message="Input file(s) differ from the examples.")
+
+
+    return student
+
+def user_based(data_dict, input_similarity):
+    '''
+    Based on the recommendations module. Replaces the global final_recommendations with a list of (recommended course,
+    grade point) tuples calculated using the functions inside the recommendations module. The respective function(s)
+    in the recommendations module are called according to the user's choices at the radio buttons and
+    combox box of the GUI widget.
+    :param data_dict:
+    :param input_similarity:
+    :return:
+    '''
+    global final_recommendations
+    similarity_mapping={"Euclidean":recommendations.sim_distance, "Jaccard":recommendations.sim_jaccard2, "Pearson":recommendations.sim_pearson}
+    final_recommendations=recommendations.getRecommendations(data_dict, "test", similarity=similarity_mapping[input_similarity])[:6]
+
+def item_based(data_dict):
+    '''
+    Based on the recommendations module. Replaces the global final_recommendations with a list calculated using the
+    functions inside the recommendations module. The respective function(s) in recommendations are called according to
+    the user's choices at the radio button of the GUI widget. NOTE: Similarity is irrelevant for item-based recommendations.
+    :param data_dict:
+    :return:
+    '''
+    global final_recommendations
+    final_recommendations=recommendations.getRecommendedItems(data_dict, recommendations.calculateSimilarItems(data_dict), "test")[:6]
+
+def load_past_data():
+    '''
+    Called by the 'Load Past Student Grades' button on the GUI. Opens the files and parses them with the help of
+    parse_grade_file. Updates global past_and_test nested dictionary.
+    :return:
+    '''
+    global file_address_tracker
+    global past_and_test
+    global if_sample_and_test_loaded
+
+    #Collecting given files in one list
+    file_addresses=tkFileDialog.askopenfilenames()
+    file_addresses=[file_address.encode("ascii", "ignore") for file_address in file_addresses]
+    for address in file_addresses:
+        file_address_tracker.append(address)
+
+    #Parsing files one by one
+    for i in range(len(file_address_tracker)):
+        past_and_test["item%s"%(i+1)]=parse_grade_file(file_address_tracker[i])
+
+    #To make sure that sample data was loaded
+    if_sample_and_test_loaded.append("sample")
+
+def load_transcript():
+    '''
+    Called by 'Load Your Current Transcript' button on the GUI. Does the same as load_past_data function above.
+    Updates global past_and_test nested dictionary.
+    :return:
+    '''
+    global file_address_tracker
+    global past_and_test
+    global if_sample_and_test_loaded
+
+    #Getting and parsing the given transcript file
+    file_address=tkFileDialog.askopenfilename()
+    file_address=file_address.encode("ascii", "ignore")
+    file_address_tracker.append(file_address)
+    past_and_test["test"]=parse_grade_file(file_address_tracker[-1])
+
+    #To make sure the transcript/test data was loaded
+    if_sample_and_test_loaded.append("test")
+
+def print_results():
+    '''
+    Produces output the way directed in the assignment. Note: Tk grid geometry was used in making the GUI.
+    :return:
+    '''
+    global final_recommendations
+
+    #If something is already in the area data is to be displayed at, removes it.
+    for some_label in root.grid_slaves():
+        if int(some_label.grid_info()["row"]) &gt; 5:
+            some_label.grid_forget()
+
+    #Produces the output as directed in the assignment.
+    for i in range(len(final_recommendations)):
+        ttk.Label(root, text =final_recommendations[i][1][0]+" "+final_recommendations[i][1][1]).grid(row=6+i, column=1)
+        ttk.Label(root, text =output_mapping(final_recommendations[i][0])+" (%f)"%(final_recommendations[i][0])).grid(row=6+i, column=3)
+
+
+def do_calculations(var1, var2):
+    '''
+    Called by the 'See the Recommended Courses' button. Calls respective functions according to the combinations
+    of user's choices. Produces the output on the GUI widget.
+    :param var1: input from radiobutton
+    :param var2: input from combobox
+    :return:
+    '''
+    global if_sample_and_test_loaded
+
+    #If sample and test/transcript have both been parsed and if no over-writing/multiple file-reading has occurred.
+    if ("sample" in if_sample_and_test_loaded) and ("test" in if_sample_and_test_loaded) and len(if_sample_and_test_loaded)==2:
+        if var1=="user_based" and var2 in ["Pearson", "Euclidean", "Jaccard"]:
+            user_based(past_and_test, var2)
+        elif var1=="item_based":
+            item_based(past_and_test)               #NOTE: Similarity is irrelevant for item-based recommendations.
+        else:
+            tkMessageBox.showinfo(title='Stop! What are you doing?', message="Please input reasonable choices.")
+            return
+
+        #Calling print_results to display the output
+        print_results()
+
+    #Check if data has been loaded multiple times. User is confused
+    elif len(if_sample_and_test_loaded)&gt;2:
+        tkMessageBox.showinfo(title='Restart the program', message="It won't work if you try to load files multiple times!")
+
+    #If either of sample files or test file is missing.
+    else:
+        tkMessageBox.showinfo(title='Stop! Are you high?', message="Either past grade files or transcript is missing!")
+
+
+#-----------------------------------------Main Program------------------------------------------------#
+
+
+#Tkinter-based GUI starts here. My widget uses Tkinter Grid geometry.
+root = Tk()
+<a name="0"></a><font color="#FF0000"><a href="match86-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_1.gif" alt="other" border="0" align="left"></a>
+
+ttk.Label(root, text ='Virtual Advisor v1.0').grid(row=0, column=2)
+
+#Buttons
+button1=Button(text='Load Past Student Grades', command=load_past_data).grid(row=1, column=0) #Row 1 starts here
+ttk.Label(root, text ='').grid(row=1, column=2)
+</font>button2=Button(text='Load Your Current Transcript', command=load_transcript).grid(row=1, column=4)
+
+#Radio button
+ttk.Label(root, text ='Collaborative\nFiltering Type:').grid(row=2, column=0) #Row 2 and Row 3 start here
+radio_variable=StringVar()
+radio_button_1=ttk.Radiobutton(text='User-based', variable=radio_variable, value="user_based").grid(row=2, column=1)
+radio_button_2=ttk.Radiobutton(text='Item-based', variable=radio_variable, value="item_based").grid(row=3, column=1)
+
+#Combo box
+ttk.Label(root, text ='Similarity\nMeasure:').grid(row=2, column=3)
+combo_variable=StringVar()
+ttk.Combobox(values = ("Pearson", "Euclidean", "Jaccard"), textvariable=combo_variable).grid(row=2, column=4)
+
+#Result button
+button3=Button(text='See the Recommended Courses', command=lambda : do_calculations(radio_variable.get(), combo_variable.get())).grid(row=4, column=0)
+ttk.Label(root, text ="Recommended Course").grid(row=5, column=1)
+ttk.Label(root, text ="Predicted Grade").grid(row=5, column=3)
+
+#Placeholder pattern. Replaced after recommendations are calculated.
+for i in range(6):
+        ttk.Label(root, text ="-").grid(row=6+i, column=1)
+        ttk.Label(root, text ="-").grid(row=6+i, column=3)
+
+root.mainloop()
+
+</pre>
+
+</body>
+</html>

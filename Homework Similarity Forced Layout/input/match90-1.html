@@ -1,0 +1,120 @@
+﻿<html>
+<head>
+<title>project/project10/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project30/<p><pre>
+&gt;&gt;&gt;&gt; file: Omer_Kilic_Muhammed_Salih_Ecevit.py
+from Tkinter import *
+import ttk
+import xlrd
+
+
+Virtual_Advisor = Tk()
+from tkFileDialog   import askopenfilename
+from mmap import mmap,ACCESS_READ
+from xlrd import open_workbook
+
+def pastGradeClick(event):
+    d = {}
+    name = askopenfilename()
+    book = xlrd.open_workbook(name)
+    sheet = book.sheet_by_index(0)
+
+    code = sheet.col_values(0)
+    code.pop(0)
+
+    title = sheet.col_values(1)
+    title.pop(0)
+
+    grade = sheet.col_values(2)
+    grade.pop(0)
+
+    for i in range(36):
+        d[code[i],title[i]] = grade[i]
+    print d
+
+
+
+
+def transcriptClick(event):
+    d = {}
+    name = askopenfilename()
+    book = xlrd.open_workbook(name)
+    sheet = book.sheet_by_index(0)
+
+    code = sheet.col_values(0)
+    code.pop(0)
+
+    title = sheet.col_values(1)
+    title.pop(0)
+
+    grade = sheet.col_values(2)
+    grade.pop(0)
+
+    for i in range(18):
+        d[code[i],title[i]] = grade[i]
+    print d
+
+label_1=Label(Virtual_Advisor,text="Virtual Advisor",bg="black",fg="white")
+label_1.pack(fill=X)
+
+topFrame=Frame(Virtual_Advisor)
+topFrame.pack()
+
+bottomFrame=Frame(Virtual_Advisor)
+bottomFrame.pack(side=BOTTOM)
+
+Load_Past_Grades=Button(topFrame,text="Load Past Student Grades",bg="Grey",fg="black")
+Load_Past_Grades.pack(side=LEFT)
+Load_Past_Grades.bind("&lt;Button-1&gt;", pastGradeClick)
+
+Load_Your_Current=Button(topFrame,text="Load Your Current Transcript",bg="Grey",fg="black")
+Load_Your_Current.pack(side=RIGHT)
+Load_Your_Current.bind("&lt;Button-1&gt;", transcriptClick)
+
+label_2=Label(Virtual_Advisor,text="Collabrative Filtering Type:",bg="lightgrey",fg="black")
+<a name="0"></a><font color="#FF0000"><a href="match90-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_6.gif" alt="other" border="0" align="left"></a>
+
+label_2.pack(side=LEFT)
+
+
+
+var = IntVar()
+User_Based = Radiobutton(Virtual_Advisor, text="User-based", variable=var, value=1)
+User_Based.pack( anchor = W )
+
+Item_Based = Radiobutton(Virtual_Advisor, text="Item-based", variable=var, value=2)
+</font>Item_Based.pack( anchor = W )
+
+
+
+label_3=Label(Virtual_Advisor,text="Similarity Measure",bg="lightgrey",fg="Black")
+label_3.pack(side=LEFT)
+
+x = ttk.Combobox()
+
+x['values']=("Pearson","Euclidian","Jaccard")
+x.pack(side=RIGHT)
+
+See_Recomended=Button(bottomFrame,text="See the Recommended Courses",bg="Grey",fg="black")
+See_Recomended.pack(side=LEFT)
+
+
+
+
+
+
+
+Virtual_Advisor.mainloop()
+
+
+
+
+
+
+</pre>
+
+</body>
+</html>

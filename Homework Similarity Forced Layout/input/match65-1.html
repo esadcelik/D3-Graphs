@@ -1,0 +1,322 @@
+﻿<html>
+<head>
+<title>project/project12/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project42/<p><pre>
+&gt;&gt;&gt;&gt; file: dogukan_kotan.py
+# -*- coding: utf-8 -*-
+# Project 1
+# Dogukan KOTAN
+# 212071464
+
+# This program needs PyQT4 libraries and xlrd module for Excel files respectively ---&gt;
+# http://www.riverbankcomputing.co.uk/software/pyqt/download , https://pypi.python.org/pypi/xlrd
+
+# import part
+import sys
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+from xlrd import open_workbook
+from recommendations import *
+#################################################################################
+
+
+class VirtualAdvisor(QDialog):
+
+    def __init__(self, parent=None):
+        super(VirtualAdvisor, self).__init__(parent)
+
+        # Initial Values
+        self.filter = 'User-Based'
+        self.similarity = sim_pearson
+        self.grades = {}
+        self.grades_name = ''
+        self.codewtitle = ''
+        self.map_grade = ''
+        self.table = QTableWidget()
+        #########################################################################
+
+        # Title
+        self.setWindowTitle('Virtual Advisor v1.0')
+        #########################################################################
+
+        """ Defining Widgets """
+
+        # Labels
+        self.text1 = '&lt;center&gt;&lt;font color="blue" size ="+3"&gt;Virtual Advisor v1.0&lt;/font&gt;&lt;/center&gt;'
+        self.label = QLabel(self.text1)
+        #########################################################################
+
+        # Loading Buttons
+        button_load_grades = QPushButton('Load Past Student Grades')
+        self.connect(button_load_grades, SIGNAL('pressed()'), self.load_grades)
+
+        button_load_tcript = QPushButton('Load Your Current Transcript')
+        self.connect(button_load_tcript, SIGNAL('pressed()'), self.load_tcrip)
+        #########################################################################
+
+        # Filtering Labels
+        self.text21 = 'Collaborative'
+        self.text22 = 'Filtering Type:'
+        self.label21 = QLabel(self.text21)
+        self.label22 = QLabel(self.text22)
+        #########################################################################
+
+        # Filtering Options
+        self.filterButton1 = QRadioButton('User-based')
+        self.filterButton2 = QRadioButton('Item-based')
+
+        self.filterButton1.setChecked(True)
+        ##########################################################################
+
+        # Similarity Labels
+        self.text31 = 'Similarity'
+        self.text32 = 'Measure:'
+        self.label31 = QLabel(self.text31)
+        self.label32 = QLabel(self.text32)
+        ##########################################################################
+
+        # Similarity Options
+        self.list = QComboBox()
+        self.list.addItems(('Pearson', 'Euclidean', 'Jaccard'))
+        self.connect(self.list, SIGNAL('currentIndexChanged(QString)'), self.set_similarity)
+        ######################################################################################
+
+        # Get Recommended Button
+        button_get_recommended = QPushButton('See the Recommended Courses')
+        self.connect(button_get_recommended, SIGNAL('pressed()'), self.run)
+        ##########################################################################
+
+        # Creating Grid
+        self.grid = QGridLayout()
+
+        self.grid.addWidget(self.label, 1, 0, 1, 4)
+        self.grid.addWidget(button_load_grades, 2, 0, 1, 2)
+        self.grid.addWidget(button_load_tcript, 2, 2, 1, 2)
+        self.grid.addWidget(self.label21, 3, 0, 1, 1)
+        self.grid.addWidget(self.label22, 4, 0, 1, 1)
+        self.grid.addWidget(self.filterButton1, 3, 1, 1, 1)
+        self.grid.addWidget(self.filterButton2, 4, 1, 1, 1)
+        self.grid.addWidget(self.label31, 3, 2, 1, 2)
+        self.grid.addWidget(self.label32, 4, 2, 1, 2)
+        self.grid.addWidget(self.list, 3, 3, 2, 1)
+        self.grid.addWidget(button_get_recommended, 5, 0, 1, 2)
+        ##########################################################################
+
+        # Setting Layout as a grid
+        self.setLayout(self.grid)
+        #########################################################################
+
+        # Setting Default as Width and Height
+        self.setFixedSize(360, 180)
+        #########################################################################
+
+    def create_table(self):
+
+        # Resize Width and Height
+        self.setFixedSize(360, 385)
+        #########################################################################
+
+        # Creating Table For Course and Grades
+
+        self.table.setRowCount(6)
+        self.table.setColumnCount(2)
+
+        self.table.setHorizontalHeaderLabels(['Recommended Course', 'Predicted Course'])
+
+        self.table.setColumnWidth(0, 180)
+        self.table.setColumnWidth(1, 141)
+
+        self.table.horizontalHeader().setResizeMode(0, QHeaderView.Stretch)
+        self.table.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
+        self.table.verticalHeader().setResizeMode(0, QHeaderView.Stretch)
+        self.table.verticalHeader().setResizeMode(1, QHeaderView.Stretch)
+        self.table.verticalHeader().setResizeMode(2, QHeaderView.Stretch)
+        self.table.verticalHeader().setResizeMode(3, QHeaderView.Stretch)
+        self.table.verticalHeader().setResizeMode(4, QHeaderView.Stretch)
+        self.table.verticalHeader().setResizeMode(5, QHeaderView.Stretch)
+
+        # Adding to Grid
+        self.grid.addWidget(self.table, 6, 0, 7, 4)
+        ##########################################################################
+
+    def add(self, rec):
+        rows = self.table.rowCount()
+        for i in range(rows):
+            a = 0
+            for grade, codewtitle in rec:
+
+                ''' OUTPUT MAPPING '''
+                if 4.00 &lt; float(grade) &lt;= 4.10:
+                    self.map_grade = 'A+' + ' (' + str(round(grade, 2)) + ')'
+
+                if 3.70 &lt; float(grade) &lt;= 4.00:
+                    self.map_grade = 'A' + ' (' + str(round(grade, 2)) + ')'
+
+                if 3.30 &lt; float(grade) &lt;= 3.70:
+                    self.map_grade = 'A-' + ' (' + str(round(grade, 2)) + ')'
+
+                if 3.00 &lt; float(grade) &lt;= 3.30:
+                    self.map_grade = 'B+' + ' (' + str(round(grade, 2)) + ')'
+
+                if 2.70 &lt; float(grade) &lt;= 3.00:
+                    self.map_grade = 'B' + ' (' + str(round(grade, 2)) + ')'
+
+                if 2.30 &lt; float(grade) &lt;= 2.70:
+                    self.map_grade = 'B-' + ' (' + str(round(grade, 2)) + ')'
+
+                if 2.00 &lt; float(grade) &lt;= 2.30:
+                    self.map_grade = 'C+' + ' (' + str(round(grade, 2)) + ')'
+
+                if 1.70 &lt; float(grade) &lt;= 2.00:
+                    self.map_grade = 'C' + ' (' + str(round(grade, 2)) + ')'
+
+                if 1.30 &lt; float(grade) &lt;= 1.70:
+                    self.map_grade = 'C-' + ' (' + str(round(grade, 2)) + ')'
+
+                if 1.00 &lt; float(grade) &lt;= 1.30:
+                    self.map_grade = 'D+' + ' (' + str(round(grade, 2)) + ')'
+
+                if 0.50 &lt; float(grade) &lt;= 1.00:
+                    self.map_grade = 'D' + ' (' + str(round(grade, 2)) + ')'
+
+                if 0.10 &lt; float(grade) &lt;= 0.50:
+                    self.map_grade = 'D-' + ' (' + str(round(grade, 2)) + ')'
+
+                if float(grade) &lt; 0.10:
+                    self.map_grade = 'F' + ' (' + str(round(grade, 2)) + ')'
+                ###################################################################
+
+                item1 = QTableWidgetItem()
+                item1.setText(str(codewtitle))
+                item2 = QTableWidgetItem()
+                item2.setText(str(self.map_grade))
+                item1.setFlags(Qt.ItemIsEnabled)
+                item2.setFlags(Qt.ItemIsEnabled)
+                self.table.setItem(a, 0, item1)
+                self.table.setItem(a, 1, item2)
+                a += 1
+
+    def set_similarity(self, sim):
+
+        if sim == 'Pearson':
+            self.similarity = sim_pearson
+        elif sim == 'Euclidean':
+            self.similarity = sim_distance
+        elif sim == 'Jaccard':
+            self.similarity = sim_jaccard2
+
+    def load_grades(self):
+
+        try:
+            files = QFileDialog.getOpenFileNames(self, 'Select Past Student Grades', '',
+                                                 'Excel Files (*.xlsx *.xls)')
+            map(str, files)
+            for f in files:
+                a = open_workbook(str(f))
+                first_line = True
+                for cell in a.sheets():
+
+<a name="0"></a><font color="#FF0000"><a href="match65-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_2.gif" alt="other" border="0" align="left"></a>
+
+                    for x in range(cell.nrows):
+                        graded = []
+                        for y in range(cell.ncols):
+                            graded.append(cell.cell(x, y).value)
+                        line = ';'.join(graded)
+</font>
+                        if first_line:
+                            first_line = False
+                            continue
+
+                        self.grades_name = str(f)
+                        self.grades.setdefault(self.grades_name, {})
+                        (code, title, grade) = str(line).split(';')
+                        self.codewtitle = code+' '+title
+
+                        # Input mapping for grades
+                        grades_num = {'A+': 4.10, 'A': 4.00, 'A-': 3.70, 'B+': 3.30, 'B': 3, 'B-': 2.70, 'C+': 2.30,
+                                      'C': 2.00, 'C-': 1.70, 'D+': 1.30, 'D': 1.00, 'D-': 0.50, 'F': 0.00}
+
+                        if grade in grades_num:
+                            grade = grades_num[grade]
+                        ###########################################################################################
+
+                        self.grades[self.grades_name][self.codewtitle] = float(grade)
+
+        except:
+            QMessageBox.about(self, "File Error", "Grades Cannot Open")
+
+    def load_tcrip(self):
+
+        try:
+            f_name = QFileDialog.getOpenFileName(self, 'Select Your Current Transcript', '',
+                                                 'Excel File (*.xlsx *.xls)')
+            a = open_workbook(str(f_name))
+            first_line = True
+            for cell in a.sheets():
+
+                for x in range(cell.nrows):
+                    trans = []
+                    for y in range(cell.ncols):
+                        trans.append(cell.cell(x, y).value)
+                    line = ';'.join(trans)
+
+                    if first_line:
+                        first_line = False
+                        continue
+                    self.transcript_name = str(f_name)
+                    self.grades.setdefault(self.transcript_name, {})
+                    (code, title, grade) = str(line).split(';')
+                    self.codewtitle = code+' '+title
+
+                    # Input mapping for grades
+                    grades = {'A+': 4.10, 'A': 4.00, 'A-': 3.70, 'B+': 3.30, 'B': 3.00, 'B-': 2.70, 'C+': 2.30,
+                              'C': 2.00, 'C-': 1.70, 'D+': 1.30, 'D': 1.00, 'D-': 0.50, 'F': 0.00}
+                    if grade in grades:
+                        grade = grades[grade]
+                    ###########################################################################################
+
+                    self.grades[self.transcript_name][self.codewtitle] = float(grade) # Adding to the dict
+        except:
+            QMessageBox.about(self, "File Error", "Transcript couldn't open")  # For errors
+
+    def run(self):
+
+        try:
+            if self.filterButton1.isChecked():
+                # Get user based
+                user_based = getRecommendations(self.grades, self.transcript_name, self.similarity)
+                ###########################################################################################
+
+                self.create_table()
+                self.add(user_based)
+
+            elif self.filterButton2.isChecked():
+                # Get item based
+                items = calculateSimilarItems(self.grades)
+                item_based = getRecommendedItems(self.grades, items, self.transcript_name)
+                ###########################################################################################
+
+                self.create_table()
+                self.add(item_based)
+        except:
+            QMessageBox.about(self, "File Error", "Grades and Transcript files need "
+                                                  "to be provided first!") # For errors
+
+
+def loop():
+    # Creating Application
+    app = QApplication(sys.argv)
+    screen = VirtualAdvisor()
+    screen.show()
+    sys.exit(app.exec_())
+    ###########################################################################################
+
+if __name__ == '__main__':
+    loop()</pre>
+
+</body>
+</html>

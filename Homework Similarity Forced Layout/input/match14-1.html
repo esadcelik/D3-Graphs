@@ -1,0 +1,501 @@
+﻿<html>
+<head>
+<title>project/project18/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project23/<p><pre>
+&gt;&gt;&gt;&gt; file: Famil_Familzade_MiniProject1.py
+# FAMIL FAMILZADE 212181010
+# MY FUNCTION GETS INPUTS BY WRITING WITH " raw input()" FORM. FOR EXAMPLE I WILL GIVE AN INPUT SampleStudentGrades1.xlsx
+# FOR 'LOAD PAST STUDENT GRADES' AND   SampleTranscript.xlsx FOR THE TRANSCRIPT PART. THEN THE FUNCTION WILL GENERATE A DICTIONARY OF
+# GRADES OF BOTH STUDENTS, FOR THE THIRD INPUT IF I WRITE user based IT WILL GIVE AN OUTPUT OF FUNCTION IN THE WINDOW GUI,
+# IF I WRITE item based THE FUNCTION WILL DO THE SAME THING ACCORDING ITEMBASED COLLABORATING. ONLY INCOMPLETED SIDE OF FUNCTION IS
+# THAT INPUTS HAVE TO BE WRITTEN, BUT NOT SELECTED BY GUI.
+
+from xlrd import open_workbook,cellname
+from xlrd import open_workbook,cellname
+import recommendations
+#-*-coding:utf-8-*-
+
+from swampy.Gui import *
+from Tkinter import *
+import ttk
+import Tkinter as tk
+import tkFont
+
+
+
+
+
+
+def dic(sheet):
+    initial_dict = {}
+    for i in range(1, sheet.nrows):
+
+        initial_dict[sheet.cell(i, 1).value] = sheet.cell(i, 2).value
+
+    mainlist = initial_dict.values()
+    for i in range(len(mainlist)):
+        if mainlist[i] == 'A+':
+            mainlist[i] = 4.1
+        elif mainlist[i] == 'A':
+            mainlist[i] = 4.0
+        elif mainlist[i] == 'A-':
+            mainlist[i] = 3.7
+        elif mainlist[i] == 'B+':
+            mainlist[i] = 3.3
+        elif mainlist[i] == 'B':
+            mainlist[i] = 3.0
+        elif mainlist[i] == 'B-':
+            mainlist[i] = 2.7
+        elif mainlist[i] == 'C+':
+            mainlist[i] = 2.3
+        elif mainlist[i] == 'C':
+            mainlist[i] = 2.0
+        elif mainlist[i] == 'C-':
+            mainlist[i] = 1.7
+        elif mainlist[i] == 'D+':
+            mainlist[i] = 1.3
+        elif mainlist[i] == 'D':
+            mainlist[i] = 1.0
+        elif mainlist[i] == 'D-':
+            mainlist[i] = 0.5
+        elif mainlist[i] == 'F':
+            mainlist[i] = 0
+
+
+    dict_student1 = {}
+    for i in range(len(mainlist)):
+        dict_student1[initial_dict.keys()[i]] = mainlist[i]
+    return dict_student1
+
+
+
+
+#print main1('SampleStudentGrades2.xlsx')
+
+def main():
+    a = raw_input('load past student grades:')
+    book = open_workbook(a)
+    sheet_a = book.sheet_by_index(0)
+    b = raw_input('transcript:')
+    book = open_workbook(b)
+    sheet_b = book.sheet_by_index(0)
+
+
+    final_dict = {}
+    final_dict['sample_student'] = dic(sheet_a)
+    final_dict['main_student'] = dic(sheet_b)
+    user_based_of = recommendations.getRecommendations(final_dict, 'main_student', recommendations.sim_distance)
+    itemMatch = recommendations.calculateSimilarItems(final_dict, n=6)
+    item_based_of = recommendations.getRecommendedItems(final_dict, itemMatch, 'main_student')
+    c = raw_input('filtering type( item based or user based ):')
+    if c == 'item based':
+        g = Gui()
+
+
+        v = IntVar()
+
+
+        label = g.la(text="Virtual Advisor A.A.E.0.1", width=100)
+
+        g.col()
+        g.gr(cols=2)
+        button1= g.bu(text="Load Past Student Grade""",padx=30,width=10,height=1)
+        button2 =g.bu(text="Load Your Current Transcript")
+        g.endgr()
+        g.endcol()
+
+        g.row()
+        label2= g.la(text="Collaborative Filtering Type", width=100).pack(fill=Y,side=RIGHT)
+        g.endrow()
+
+        g.gr(cols=3)
+
+        Radiobutton(g, text="Used-based", value=1).pack()
+        Radiobutton(g, text="Item-based", value=2).pack()
+        box= ttk.Combobox(g)
+        box["values"]= ("Pearson","Euclidean", "Jaccard")
+        box.current(0)
+        box.pack()
+
+
+        g.row()
+<a name="2"></a><font color="#0000FF"><a href="match14-0.html#2" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_2_2.gif" alt="other" border="0" align="left"></a>
+
+        class McListBox(object):
+
+
+            def __init__(self):
+                self.tree = None
+                self._setup_widgets()
+                self._build_tree()
+            def _setup_widgets(self):
+
+                msg = ttk.Label(wraplength="4i", justify="left", anchor="n",
+                    padding=(10, 2, 10, 6),)
+                msg.pack(fill='x')
+                container = ttk.Frame()
+                container.pack(fill='both', expand=True)
+</font>
+<a name="0"></a><font color="#FF0000"><a href="match14-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_6.gif" alt="other" border="0" align="left"></a>
+
+                self.tree = ttk.Treeview(columns=car_header, show="headings")
+                vsb = ttk.Scrollbar(orient="vertical",
+                    command=self.tree.yview)
+                hsb = ttk.Scrollbar(orient="horizontal",
+                    command=self.tree.xview)
+                self.tree.configure(yscrollcommand=vsb.set,
+                    xscrollcommand=hsb.set)
+                self.tree.grid(column=0, row=0, sticky='nsew', in_=container)
+                vsb.grid(column=1, row=0, sticky='ns', in_=container)
+                hsb.grid(column=0, row=1, sticky='ew', in_=container)
+                container.grid_columnconfigure(0, weight=1)
+                container.grid_rowconfigure(0, weight=1)
+            def _build_tree(self):
+                for col in car_header:
+                    self.tree.heading(col, text=col.title(),
+                        command=lambda c=col: sortby(self.tree, c, 0))
+
+                    self.tree.column(col,
+                        width=tkFont.Font().measure(col.title()))
+                for item in car_list:
+</font><a name="1"></a><font color="#00FF00"><a href="match14-0.html#1" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_1_2.gif" alt="other" border="0" align="left"></a>
+
+                    self.tree.insert('', 'end', values=item)
+
+                    for ix, val in enumerate(item):
+                        col_w = tkFont.Font().measure(val)
+                        if self.tree.column(car_header[ix],width=None)&lt;col_w:
+                            self.tree.column(car_header[ix], width=col_w)
+        def sortby(tree, col, descending):
+</font>
+
+<a name="3"></a><font color="#00FFFF"><a href="match14-0.html#3" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_3_1.gif" alt="other" border="0" align="left"></a>
+
+            data = [(tree.set(child, col), child) \
+                for child in tree.get_children('')]
+
+
+
+            data.sort(reverse=descending)
+            for ix, item in enumerate(data):
+                tree.move(item[1], '', ix)
+
+            tree.heading(col, command=lambda col=col: sortby(tree, col, \
+</font>                int(not descending)))
+        car_header = ['predicted grades', 'reccomended courses']
+        car_list = item_based_of
+
+        mc_listbox = McListBox()
+
+
+        button3 = g.bu(text="See The Recommended Courses",width=10,height=1,)
+        g.endrow()
+
+
+        g.mainloop()
+
+
+    if c == 'user based':
+        g = Gui()
+
+
+        v = IntVar()
+
+
+        label = g.la(text="Virtual Advisor A.A.E.0.1", width=100)
+
+        g.col()
+        g.gr(cols=2)
+        button1= g.bu(text="Load Past Student Grade""",padx=30,width=10,height=1)
+        button2 =g.bu(text="Load Your Current Transcript")
+        g.endgr()
+        g.endcol()
+
+        g.row()
+        label2= g.la(text="Collaborative Filtering Type", width=100).pack(fill=Y,side=RIGHT)
+        g.endrow()
+
+        g.gr(cols=3)
+
+        Radiobutton(g, text="Used-based", value=1).pack()
+        Radiobutton(g, text="Item-based", value=2).pack()
+        box= ttk.Combobox(g)
+        box["values"]= ("Pearson","Euclidean", "Jaccard")
+        box.current(0)
+        box.pack()
+
+
+        g.row()
+        class McListBox(object):
+
+
+            def __init__(self):
+                self.tree = None
+                self._setup_widgets()
+                self._build_tree()
+            def _setup_widgets(self):
+
+                msg = ttk.Label(wraplength="4i", justify="left", anchor="n",
+                    padding=(10, 2, 10, 6),)
+                msg.pack(fill='x')
+                container = ttk.Frame()
+                container.pack(fill='both', expand=True)
+
+                self.tree = ttk.Treeview(columns=car_header, show="headings")
+                vsb = ttk.Scrollbar(orient="vertical",
+                    command=self.tree.yview)
+                hsb = ttk.Scrollbar(orient="horizontal",
+                    command=self.tree.xview)
+                self.tree.configure(yscrollcommand=vsb.set,
+                    xscrollcommand=hsb.set)
+                self.tree.grid(column=0, row=0, sticky='nsew', in_=container)
+                vsb.grid(column=1, row=0, sticky='ns', in_=container)
+                hsb.grid(column=0, row=1, sticky='ew', in_=container)
+                container.grid_columnconfigure(0, weight=1)
+                container.grid_rowconfigure(0, weight=1)
+            def _build_tree(self):
+                for col in car_header:
+                    self.tree.heading(col, text=col.title(),
+                        command=lambda c=col: sortby(self.tree, c, 0))
+
+                    self.tree.column(col,
+                        width=tkFont.Font().measure(col.title()))
+                for item in car_list:
+                    self.tree.insert('', 'end', values=item)
+
+                    for ix, val in enumerate(item):
+                        col_w = tkFont.Font().measure(val)
+                        if self.tree.column(car_header[ix],width=None)&lt;col_w:
+                            self.tree.column(car_header[ix], width=col_w)
+        def sortby(tree, col, descending):
+
+
+            data = [(tree.set(child, col), child) \
+                for child in tree.get_children('')]
+
+
+
+            data.sort(reverse=descending)
+            for ix, item in enumerate(data):
+                tree.move(item[1], '', ix)
+
+            tree.heading(col, command=lambda col=col: sortby(tree, col, \
+                int(not descending)))
+        car_header = ['predicted grades', 'recommended courses']
+        car_list = user_based_of
+
+        mc_listbox = McListBox()
+
+
+        button3 = g.bu(text="See The Recommended Courses",width=10,height=1,)
+        g.endrow()
+
+
+        g.mainloop()
+
+    print final_dict
+
+
+main()
+
+
+&gt;&gt;&gt;&gt; file: Zena_Termanini.py
+__author__ = 'zenatermanini'
+
+from Tkinter import *
+from recommendations import *
+import ttk, xlrd, tkFileDialog, tkMessageBox
+
+# A dictionary showing the mapping between letter grades and grades.
+GradingSystem = {'A+': 4.1, 'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7, 'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                 'D+': 1.3, 'D': 1.0, 'D-': 0.5, 'F': 0.0}
+
+# A dictionary that will hold the Data provided by the user. Data={'User':{Course_name}:Grade}
+Data = {}
+
+# A dictionary showing the mapping between output ranges and corresponding letter grades.
+OutputGrading = {(4.0, 5.0): 'A+', (3.7, 4.0): 'A', (3.3, 3.7): 'A-', (3.0, 3.3): 'B+', (2.7, 3.0): 'B',
+                 (2.3, 2.7): 'B-', (2.0, 2.3): 'C+', (1.7, 2.0): 'C',
+                 (1.3, 1.7): 'C-', (1.0, 1.3): 'D+', (0.5, 1.0): 'D', (0.1, 0.5): 'D-', (0.0, 0.1): 'F'}
+
+# List holder for output values displayed in TreeView
+headers = ['Recommended Courses', 'Predicted Grade']
+
+
+class App:
+    """ Class that holds the widgets and functionalities of our app """
+
+    def __init__(self, master):
+        """ Initiate the app window
+        master: tk object instance
+        """
+        #main frame
+        master.title('Virtual Advisor v1.0')
+        frame = Frame(master)
+        frame.pack()
+
+        self.Title = Label(frame, text='Virtual Advisor v1.0', fg='blue', font='Times 20 bold').grid(row=1,
+                                                                                                     columnspan=2,
+                                                                                                     pady=20,
+                                                                                                     sticky=(N))
+
+        #Buttons
+        ttk.Style().configure("TButton", padding=6, relief="flat", background="#ccc")  # Button Styling
+        self.Past_Grades = ttk.Button(frame, text='Load Past Students Grades', command=self.open_files).grid(row=2,
+                                                                                                             column=0,
+                                                                                                             pady=20,
+                                                                                                             padx=5)
+        self.Transcript = ttk.Button(frame, text='Load Your Current Transcript', command=self.open_file).grid(row=2,
+                                                                                                              column=1,
+                                                                                                              pady=20,
+                                                                                                              padx=5)
+
+        #RadioButtons
+        self.filtertype = Label(frame, text='Collaborative Filtering Type :', justify=LEFT).grid(row=3, column=0,
+                                                                                                 pady=10, )
+        self.user_based_filter = Radiobutton(frame, text='User-based', variable=radioVar, value='User-based').grid(
+            row=3, column=1, sticky=(W))
+        self.item_based_filter = Radiobutton(frame, text='Item-based', variable=radioVar, value='Item-based').grid(
+            row=4, column=1, sticky=(W))
+
+        #ComboBox
+        self.similarity_type = Label(frame, text='Similarity Measure :').grid(row=6, column=0, pady=20)
+        self.combobox_options = ['Pearson', 'Euclidean', 'Jaccard']
+        self.box = ttk.Combobox(frame, textvariable=ComboVar, values=self.combobox_options, width=10).grid(row=6,
+                                                                                                           column=1,
+                                                                                                           pady=20,
+                                                                                                           sticky=(W))
+        #Recommend Button
+        self.get_recommendation = ttk.Button(frame, text='See The Recommended Courses',
+                                             command=self.Build_recommend).grid(row=8, column=0, columnspan=2, pady=15)
+
+    def open_files(self):
+        """ ask for files from user
+        calls build_data() with file names
+        """
+        fs = tkFileDialog.askopenfilenames()
+        if len(fs) &gt; 0:
+            self.build_previous_data(fs)
+
+    def open_file(self):
+        """ ask for single file from user
+        calls build_data() with file name
+        """
+        f = tkFileDialog.askopenfilename()
+        if f != None:
+            self.build_transcript(f)
+
+    def build_transcript(self, file):
+        """ Reads the passed file -current student transcript and adds its values to Data dictionary
+        """
+        excel_file = xlrd.open_workbook(file)
+        transcript = excel_file.sheet_by_index(0)
+        key = 'Current Student'  # 'Current Student' refers to App user
+        for row in range(1, transcript.nrows):
+            # read the file row by row and add the data to the Data dict
+            CourseCode = str(transcript.row(row)[0]).split("\'")[1]
+            CourseName = str(transcript.row(row)[1]).split("\'")[1]
+            Grade = str(transcript.row(row)[2]).split("\'")[1]
+            Course = CourseCode + ' ' + CourseName
+            Data.setdefault(key, {})
+            Data[key][Course] = GradingSystem[Grade]
+
+    def build_previous_data(self, files):
+        """ Reads the passed files -previous student grades and adds it to the Data dictionary
+        """
+        i = 1  # holds current student number
+        for file in files:
+            excel_file = xlrd.open_workbook(file)
+            info = excel_file.sheet_by_index(0)
+            for row in range(1, info.nrows):
+                # read the file row by row and add the data to the Data dict
+                CourseCode = str(info.row(row)[0]).split("\'")[1]
+                CourseName = str(info.row(row)[1]).split("\'")[1]
+                Grade = str(info.row(row)[2]).split("\'")[1]
+                Course = CourseCode + ' ' + CourseName
+                key = 'student%d' % i
+                Data.setdefault(key, {})
+                Data[key][Course] = GradingSystem[Grade]
+            i += 1
+
+    def Build_recommend(self):
+        """
+        recommends courses to the user based on previous data and user transcript.
+        """
+
+        # clear the data displayed in the treeView if it exists
+        if len(tree.get_children()) &gt; 0:
+            for i in tree.get_children():
+                tree.delete(i)
+
+        f_type = radioVar.get()
+        similarity = ComboVar.get()
+
+        # Generate error if No files are passed
+        if len(Data) == 0:
+            tkMessageBox.showerror('Error', 'Please provide all requested files')
+        else:  # recommend based on different options
+            if f_type == 'User-based' or f_type == "":
+                if similarity == 'Pearson' or similarity == '':
+                    recommended_stuff = getRecommendations(Data, 'Current Student')
+                if similarity == 'Euclidean':
+                    recommended_stuff = getRecommendations(Data, 'Current Student', sim_distance)
+                if similarity == 'Jaccard':
+                    recommended_stuff = getRecommendations(Data, 'Current Student', sim_jaccard2)
+
+            if f_type == 'Item-based':
+                transformed_data = calculateSimilarItems(Data, 6)
+                recommended_stuff = getRecommendedItems(Data, transformed_data, 'Current Student')
+            # call format_recommend() to reformat recommended_stuff in order to be displayed in the TreeView
+            Formated_recommended_stuff = self.format_recommend(recommended_stuff)
+            #display the recommendations in TreeView widget
+            self.build_tree(Formated_recommended_stuff)
+
+    def format_recommend(self, recommendations):
+        """
+        :param recommendations: dictionary of recommendations
+        :return: list of tuples containing recommended courses and corresponding grades
+        """
+        formated = []
+        for item in recommendations:
+            for range in OutputGrading.keys():
+                if range[0] &lt; item[0] and item[0] &lt; range[1]:
+                    formated.append((item[1], str('%.2f ' % item[0]) + OutputGrading[range]))
+        return formated
+
+    def build_tree(self, recommendation):
+        """
+        :param recommendation: dictionary of recommendations
+        inserts the items in recommendations in the TreeView
+        """
+        for item in recommendation[0:6]:
+            tree.insert('', 'end', values=item)
+
+
+root = Tk()
+
+radioVar = StringVar()  # holds the radiobutton value
+ComboVar = StringVar()  # holds the comboBox value
+
+# TreeView widget
+tree = ttk.Treeview(root, columns=headers, show='headings')
+tree.config(height=6)
+tree.heading("Recommended Courses", text="Recommended Courses")
+tree.heading("Predicted Grade", text="Predicted Grade")
+tree.column("Recommended Courses", minwidth=0, width=300)
+tree.column("Predicted Grade", minwidth=0, width=100)
+
+
+window = App(root)
+
+
+tree.pack(pady=10, padx=5)
+root.mainloop()
+
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+* {
+	margin: 0;
+	padding: 0;
+
+	font: bold 14px Arial, sans-serif;
+}
+#wrapper {
+    width: 80%;
+    margin: 30px auto;
+}
+.slc {
+	margin-left: auto;
+    margin-right: auto;
+    width: 20%;
+   
+}
+.ppp {
+	margin-left: auto;
+    margin-right: auto;
+    width: 10%;
+   
+}
+.line {
+  fill: none;
+  stroke: #99FF33;
+  stroke-width: 2px;
+  }
+
+.graphs {}
+
+.graph1 {
+  width:300px;
+  height:300px;
+  float:left;
+  
+}
+
+.graph2 {
+  width:300px;
+  height:300px;
+  float:left;
+  
+}
+
+.graph3 {
+  width:300px;
+  height:300px;
+  float:left;
+  
+}
+path.area {
+  fill: steelblue;
+  
+}
+.rec {
+  fill: #006666;
+  
+}

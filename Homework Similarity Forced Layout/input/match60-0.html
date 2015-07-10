@@ -1,0 +1,231 @@
+﻿<html>
+<head>
+<title>project/project16/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project16/<p><pre>
+&gt;&gt;&gt;&gt; file: Mohamad-Kannan-Idris-Ahmad-Aljalmoud.py
+#### ENGR 212 Programming Practice - Mini-Project-1  (group)
+### Name: Mohamad Kannan Idris ; ID:213050716
+### Name: Ahmad Aljalmoud ; ID:212332570
+
+#Importing important modules
+from recommendations import *
+from xlrd import *
+from Tkinter import *
+from Tkconstants import *
+import tkFileDialog
+from swampy.Gui import *
+import ttk
+
+#Initializing Variables for Error messages
+fname = 0
+Cname = 0
+
+def openFiles():  ### Acquiring old student transcripts' names and storing them in a list
+    global fname
+    fname = tkFileDialog.askopenfilenames()
+    list1 = []
+    for i in fname:
+        list1.append(str(i))
+    fname = list1
+
+
+def CurrentFile(): ### Acquiring the Current student transcript file name and storing it in a variable as a string
+    global Cname
+    Cname = tkFileDialog.askopenfilename()
+    Cname = str(Cname)
+
+
+def File2Dict(fname,Cname): ### All acquired file name are opened and the file contents are put in a dictionary as values
+    global mainDict  ##The dictionary that is used in the functions
+    mainDict = dict()
+    list2 = []
+    for i in fname:
+        list2.append(i)
+    list2.append(Cname)
+    for file in list2:
+        wb = open_workbook(file)
+        mainDict[str(file)]={} ##Creating a dictionary where the keys are file names and the values are nested dictionaries
+<a name="0"></a><font color="#FF0000"><a href="match60-1.html#0" target="1"><img src="http://moss.stanford.edu/bitmaps/tm_0_3.gif" alt="other" border="0" align="left"></a>
+
+        for s in wb.sheets(): ##reading sheets in case of existance
+
+            for row in range(1,s.nrows): #going through rows and skipping the first row which includes only 'Code','Title' and 'Grade'
+
+
+                col1 = s.cell(row,0).value #Course Code
+
+                col2 = s.cell(row,1).value #Course Title
+
+                col3 = s.cell(row,2).value #Letter Grade
+</font>                col3 = GradeMapping1(col3) #mapping letter grades to given numerical grades
+                key = str(col1+' '+ col2) #putting course code and course name in same string
+
+                mainDict[str(file)][key] = col3 #creating the dictionary
+
+
+    return mainDict
+
+
+def GradeMapping1(letter): #Mapping Acquired letter grades to given numerical grades
+    if letter == 'A+':
+        return 4.1
+    elif letter == 'A':
+        return 4.0
+    elif letter == 'A-':
+        return 3.7
+    elif letter == 'B+':
+        return 3.3
+    elif letter == 'B':
+        return 3.0
+    elif letter == 'B-':
+        return 2.7
+    elif letter == 'C+':
+        return 2.3
+    elif letter == 'C':
+        return 2.0
+    elif letter == 'C-':
+        return 1.7
+    elif letter == 'D+':
+        return 1.3
+    elif letter == 'D':
+        return 1.0
+    elif letter == 'D-':
+        return 0.5
+    elif letter == 'F':
+        return 0.0
+
+
+def decide(): #Final answer giving function
+    #Error messages
+    if fname == 0 and Cname == 0:
+        ERROR = Gui()
+        ERROR.title('ERROR!')
+        ERROR.la(text='Past Student Grades and Your Current Transcript do not exist. \n \n Please Load!', padx=20, pady =20)
+        ERROR.mainloop()
+    elif fname == 0:
+        ERROR = Gui()
+        ERROR.title('ERROR!')
+        ERROR.la(text='Past Student Grades does not exist. \n \n Please Load!', padx=20, pady =20)
+        ERROR.mainloop()
+    elif Cname == 0:
+        ERROR = Gui()
+        ERROR.title('ERROR!')
+        ERROR.la(text='Your Current Transcript does not exist. \n \n Please Load!', padx=20, pady =20)
+        ERROR.mainloop()
+
+    mainDict = File2Dict(fname, Cname) #used dictionary
+    base = R.get() #value of Radio Buttons as numbers {User-base:1, Item-base:2}
+    sims = box_value.get() #value of combobox as strings ['Pearson', 'Euclidean', 'Jaccard'] (only one)
+    ### Passing main dictionary as a parameter in imported funtions and returning the first 6 tuples in a list
+    if base == 1:#User-Base
+        if sims == 'Pearson':
+            samir = getRecommendations(mainDict,Cname,similarity=sim_pearson)[:6]
+        elif sims == 'Euclidean':
+            samir = getRecommendations(mainDict,Cname,similarity=sim_distance)[:6]
+        elif sims == 'Jaccard':
+            samir = getRecommendations(mainDict,Cname,similarity=sim_jaccard2)[:6]
+    elif base == 2:#Item-Base
+        itemsim = calculateSimilarItems(mainDict,n=len(mainDict))
+        samir = getRecommendedItems(mainDict,itemsim,Cname)[:6]
+
+    for i in range(10): #Clearing the treeview by filling it with empty strings
+        tree.insert('',0,values=('',''))
+
+    samir = GradeMapping2(samir) #Mapping the predicted grade from numerical to a string containing bot letter and numerical grade
+
+    for i in samir: #placing the Final values on the tree view
+        n1,n2 = i
+        tree.insert('',0,values=(n2,n1))
+
+
+def GradeMapping2(ListOfTuples):
+#Mapping the predicted acquired grades from numerical to a string containing both letter and numerical grade
+    result=[]
+    for i in ListOfTuples:
+        b1,b2 = i
+        if b1 &gt; 4:
+            qq='A+ (%.3g)'%b1
+        elif b1&lt;= 4 and b1 &gt; 3.7:
+            qq='A  (%.3g)'%b1
+        elif b1&lt;= 3.7 and b1 &gt; 3.3:
+            qq='A- (%.3g)'%b1
+        elif b1&lt;= 3.3 and b1 &gt; 3.0:
+            qq='B+ (%.3g)'%b1
+        elif b1&lt;= 3.0 and b1 &gt; 2.7:
+            qq='B  (%.3g)'%b1
+        elif b1&lt;= 2.7 and b1 &gt; 2.3:
+            qq='B- (%.3g)'%b1
+        elif b1&lt;= 2.3 and b1 &gt; 2.0:
+            qq='C+ (%.3g)'%b1
+        elif b1&lt;= 2.0 and b1 &gt; 1.7:
+            qq='C  (%.3g)'%b1
+        elif b1&lt;= 1.7 and b1 &gt; 1.3:
+            qq='C- (%.3g)'%b1
+        elif b1&lt;= 1.3 and b1 &gt; 1.0:
+            qq='D+ (%.3g)'%b1
+        elif b1&lt;= 1.0 and b1 &gt; 0.5:
+            qq='D  (%.3g)'%b1
+        elif b1&lt;= 0.5 and b1 &gt; 0.1:
+            qq='D- (%.3g)'%b1
+        elif b1&lt;= 0.1:
+            qq='F  (%.3g)'%b1
+        result.append((qq,b2))
+    result.reverse()
+    return result
+
+
+
+
+g = Gui()
+
+g.title('Virtual Adviser v 1.0')
+
+label = g.la(text='Virtual Adviser v 1.0',pady=15)
+
+
+
+
+g.row() #row including two buttons buttons
+LoadPast = g.bu(text='Load Past Student Grades',command=openFiles,padx=30,pady=20) #used for opening old students transcripts
+LoadCurrent = g.bu(text='Load Your Current Transcript',command=CurrentFile,padx=30,pady=20)#used for opening current student transcript
+
+
+g.endrow()
+
+Label(g,text="Collaborative Filtering Type :",justify = LEFT,padx = 20).pack()
+
+
+#Radio buttons
+R = IntVar()
+R.set(1)
+R1 = Radiobutton(g,text="User-based", variable=R, value=1)
+R2 = Radiobutton(g,text="Item-based", variable=R, value=2)
+R1.pack()
+R2.pack()
+
+#ComboBox
+Label(g,text="Similarity Measure :",justify = LEFT,padx = 20).pack()
+box_value = StringVar()
+box = ttk.Combobox(g, textvariable=box_value)
+box['values'] = ('Pearson', 'Euclidean', 'Jaccard')
+box.current(0)
+box.pack()
+
+Recommend = g.bu(text='See The Recommended Courses', command=decide, pady =20,padx=30).pack() #Answer Giving button
+
+#TreeView
+tree = ttk.Treeview(g, columns =[0,1], show ='headings')
+tree.heading(0,text='Recommended Courses')
+tree.heading(1,text='Predicted Grade')
+tree.column(0,width=300)
+tree.column(1,width=100)
+tree.pack(anchor=CENTER, pady =20, padx=20)
+
+g.mainloop()
+</pre>
+
+</body>
+</html>

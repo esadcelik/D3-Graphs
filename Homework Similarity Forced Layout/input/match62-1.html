@@ -1,0 +1,202 @@
+﻿<html>
+<head>
+<title>project/project13/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project9/<p><pre>
+&gt;&gt;&gt;&gt; file: sena_nur_surat.py
+from mmap import mmap, ACCESS_READ
+from xlrd import open_workbook
+from math import sqrt
+
+# Returns a distance-based similarity score for person1 and person2
+
+def sim_distance(prefs, person1, person2):
+    # Get the list of shared_items
+    si = {}
+    for item in prefs[person1]:
+        if item in prefs[person2]: si[item] = 1
+
+    # if they have no ratings in common, return 0
+    if len(si) == 0: return 0
+
+    # Add up the squares of all the differences
+    sum_of_squares = sum([pow(prefs[person1][item] - prefs[person2][item], 2)
+                          for item in prefs[person1] if item in prefs[person2]])
+
+    return 1 / (1 + sqrt(sum_of_squares))
+
+
+# Returns the Pearson correlation coefficient for p1 and p2
+def sim_pearson(prefs, p1, p2):
+    # Get the list of mutually rated items
+    si = {}
+    for item in prefs[p1]:
+        if item in prefs[p2]: si[item] = 1
+
+    # if they are no ratings in common, return 0
+    if len(si) == 0: return 0
+
+    # Sum calculations
+    n = len(si)
+
+    # Sums of all the preferences
+    sum1 = sum([prefs[p1][it] for it in si])
+    sum2 = sum([prefs[p2][it] for it in si])
+
+    # Sums of the squares
+    sum1Sq = sum([pow(prefs[p1][it], 2) for it in si])
+    sum2Sq = sum([pow(prefs[p2][it], 2) for it in si])
+
+    # Sum of the products
+    pSum = sum([prefs[p1][it] * prefs[p2][it] for it in si])
+
+    # Calculate r (Pearson score)
+    num = pSum - (sum1 * sum2 / n)
+    den = sqrt((sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n))
+    if den == 0: return 0
+
+    r = num / den
+
+    return r
+
+
+def sim_jaccard(prefs, genre1, genre2):  # Jaccard Distance (A, B) = |A intersection B| / |A union B|
+
+    # Get the list of shared_items
+    p1_intersect_p2 = {}
+    for item in prefs[genre1]:
+        if item in prefs[genre2]: p1_intersect_p2[item] = 1
+
+    # if they have no items in common, return 0
+    if len(p1_intersect_p2) == 0: return 0
+
+    # Get the list of all items that we have
+    p1_union_p2 = prefs[genre1]
+    for item in prefs[genre2]:
+        if item not in p1_union_p2: p1_union_p2[item] = 1
+
+    #Get the total number of items for intersection and union
+    p1_intersect_p2, p1_union_p2 = len(p1_intersect_p2), len(p1_union_p2)
+
+    return float(p1_intersect_p2) / float(p1_union_p2) # return jaccard distance
+
+def transformPrefs(prefs):
+    result = {}
+    for person in prefs:
+        for item in prefs[person]:
+            result.setdefault(item, {})
+
+            # Flip item and person
+            result[item][person] = prefs[person][item]
+    return result
+
+def topMatches(prefs, person, n=6, similarity=sim_pearson):
+    scores = [(similarity(prefs, person, other), other)
+              for other in prefs if other != person]
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+    
+def calculateSimilarItems(prefs, n=10):
+    # Create a dictionary of items showing which other items they
+    # are most similar to.
+    result = {}
+    # Invert the preference matrix to be item-centric
+    itemPrefs = transformPrefs(prefs)
+    c = 0
+    for item in itemPrefs:
+        # Find the most similar items to this one
+        scores = topMatches(itemPrefs, item, n=n, similarity=sim_distance)
+        result[item] = scores
+    return result
+    
+def getRecommendations(prefs, person, similarity=sim_pearson):
+    totals = {}
+    simSums = {}
+    for other in prefs:
+        # don't compare me to myself
+        if other == person: continue
+        sim = similarity(prefs, person, other)
+
+        # ignore scores of zero or lower
+        if sim &lt;= 0: continue
+        for item in prefs[other]:
+
+            # only score movies I haven't seen yet
+            if item not in prefs[person] or prefs[person][item] == 0:
+                # Similarity * Score
+                totals.setdefault(item, 0)
+                totals[item] += prefs[other][item] * sim
+                # Sum of similarities
+                simSums.setdefault(item, 0)
+                simSums[item] += sim
+
+    # Create the normalized list
+    rankings = [(total / simSums[item], item) for item, total in totals.items()]
+
+    # Return the sorted list
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+let2num = {"A+":4.1,"A":4,"A-":3.7,"B+":3.3,"B":3,"B-":2.7,"C+":2.3,"C":2,"C-":1.7,"D+":1.3,"D":1,"D-":0.5,"F":0}
+def open_grade_book(name):
+	wb = open_workbook(name)
+	d = {}
+	main = []
+<a name="0"></a><font color="#FF0000"><a href="match62-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_3.gif" alt="other" border="0" align="left"></a>
+
+	for s in wb.sheets():
+		for row in range(s.nrows):
+			temp = []
+			for col in range(s.ncols):
+				temp.append(s.cell(row,col).value)
+</font>			main.append(temp)
+			
+	main.pop(0)
+	for l in main:
+		d[l[0]+" "+l[1]] = let2num[l[2]]
+	return d
+	
+#open_grade_book("SampleTranscript.xlsx")
+
+
+#this code is to get critics easily
+#in put is the list of excel file names
+#output is a dictionary of students and his/her grades -&gt;  { st1: { course1:grade } }
+def get_critics(l):
+	out = {}
+	for i in range(len(l)):
+		out["std"+str(i)] = open_grade_book(l[i])
+		
+	return out
+
+l = ["SampleStudentGrades1.xlsx","SampleStudentGrades2.xlsx","SampleStudentGrades3.xlsx","SampleTranscript.xlsx"]
+critics = get_critics(l)
+print critics
+person = "std3"
+def filter(critics, person, f_type, s_meas):
+	
+	if f_type == "item_based":
+		critics = calculateSimilarItems(critics)
+	else:	
+		if s_meas == "pearson":
+			r = getRecommendations(critics,person,sim_pearson) #"call pearson"
+			r = r[:6]
+		
+		elif s_meas == "euclidean":
+			r = getRecommendations(critics,person,sim_distance)#"call euclidian"
+			r = r[:6]
+		elif s_meas == "jaccard":
+			"call jaccard"
+			pass
+		
+	return r	
+	
+print filter(critics,person,"userbased","euclidean")	
+		</pre>
+
+</body>
+</html>

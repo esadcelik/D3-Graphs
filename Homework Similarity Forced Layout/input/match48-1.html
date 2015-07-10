@@ -1,0 +1,74 @@
+﻿<html>
+<head>
+<title>project/project10/</title>
+</head>
+<body bgcolor="white">
+<hr>
+project/project27/<p><pre>
+&gt;&gt;&gt;&gt; file: burak_un_talha_tekden.py
+#Burak Un - 212072192 / Talha Tekden - 213012060
+from swampy.Gui import *
+from Tkinter import *
+from recommendations import *
+from xlrd import *
+import ttk
+import tkFileDialog
+g = Gui()
+canvas=g.ca(width=600,height=500, bg="red")
+canvasust=g.ca(width=460,height=30, bg="white")
+canvasust.place(relx=0.1, rely=0.1)
+mainlabel=g.la(text="Virtual Advisor", bg="white").place(rely=.1, relx=.4)
+
+def askopenfilename():
+    filename=tkFileDialog.askopenfilename()
+    print filename
+    open(filename)
+def askopenfilenames():
+    filenames=tkFileDialog.askopenfilenames(parent=g,title='Choose a file')
+    for i in filenames:
+        a=open(i)
+        for j in a:
+            print j
+
+
+
+def open(a):
+<a name="0"></a><font color="#FF0000"><a href="match48-0.html#0" target="0"><img src="http://moss.stanford.edu/bitmaps/tm_0_9.gif" alt="other" border="0" align="left"></a>
+
+    book = open_workbook(a)
+    sheet = book.sheet_by_index(0)
+    print sheet.name
+    print sheet.nrows
+    print sheet.ncols
+    for row_index in range(sheet.nrows):
+        for col_index in range(sheet.ncols):
+
+            print sheet.cell(row_index,col_index).value
+</font>
+
+
+
+buton1 = g.bu(text="Load Past Student Grades", bg="#cccccc", command=askopenfilenames).place(relx=.1,rely=.2)
+buton2 = g.bu(text="Load Your Current Transcript", bg="#cccccc", command=askopenfilename).place(relx=.6,rely=.2)
+
+canvas2=g.ca( width=460,height=80, bg="white")
+canvas2.place(relx=0.1,rely=0.3)
+rd1=Radiobutton(g, text="User-based", value=1, bg="white").place(relx=.4,rely=.4)
+rd2=Radiobutton(g, text="Item-based", value=2, bg="white").place(relx=.6,rely=.4)
+yazi=g.la(text="Collaborative Filtering Type:", bg="white").place(relx=.1,rely=.4)
+yazi2=g.la(text="Similarity Measure:", bg="white").place(relx=.1,rely=.3)
+
+cmb= ttk.Combobox(g)
+cmb["values"] = ("Pearson","Euclidean","Jaccard")
+cmb.current(0)
+cmb.place(relx=.3,rely=.3)
+
+#getRecommendations()
+buton3=g.bu(text="See the Recommended Courses", bg="#cccccc").place(relx=.1,rely=.5)
+
+
+g.mainloop()
+</pre>
+
+</body>
+</html>
